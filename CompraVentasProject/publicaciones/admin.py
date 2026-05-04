@@ -1,3 +1,5 @@
 from django.contrib import admin
+from publicaciones.models import Categoria, Publicacion
 
-# Register your models here.
+admin.site.register(Categoria)
+admin.site.register(Publicacion)
