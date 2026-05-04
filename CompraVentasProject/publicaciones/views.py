@@ -21,3 +21,5 @@ def publicar(request):
 
   if request.method == "GET":
     return render(request, "publicaciones/publicar.html", {})
+  
+
