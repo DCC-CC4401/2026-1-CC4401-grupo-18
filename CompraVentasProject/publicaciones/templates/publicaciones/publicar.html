@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html >
+  <head>
+      <meta charset="UTF-8">
+      <title>Publicar</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+      <style>
+        .contenedor{
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+        }
+
+        .caja{
+          border: 1px solid #0a0a0a;
+          border-radius: 10px;
+          padding: 30px;
+          text-align: center;
+
+        }
+      </style>
+
+  </head>
+  <body>
+    <div class= "contenedor"> 
+        <div class ="caja">
+          <p>¿Estás seguro que deseas agregar esta publicación?</p>
+          <button class="btn btn-primary">Publicar</button>
+          <a href="{%url 'publicaciones' %}" class = "btn btn-danger">Regresar</a>
+        </div>  
+    </div>
+
+  </body>
