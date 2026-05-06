@@ -1,7 +1,55 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-  <h1>
-    Pagina Principal de publicaciones
-  </h1>
 
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Compra/Venta FCFM</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<div>
+  <h1 class="display-6 text-primary text-center">Compra y vende</h1><!-- tamaño, color, centrado-->
+  <p class="fw-bold text-primary text-center">en la FCFM</p><!--cursiva, color, centrado -->
+</div>
+
+
+<div>
+  <!-- poner aqui el buscador o en vola mas arriba-->
+</div>
+
+ <!-- -->
+<body>
+<!--para mostrar las categorias -->
+{% if categorias %}
+ <!-- poner la categorizacion, y mostrar las publis q son de esa categoria, recorriendo con for-->
+{% endif %}
+
+
+<div class="row row-cols-md-3 g-4"> <!--filas, pantallas medianas muestra 3 img, gap tamaño 4 -->
+  {% for p in publicaciones %}
+  <div class="col">
+    <div class="card h-100 bs-purple"> <!--estilo tarjeta, que ocupen todo el area -->
+        {% if p.imagen %}
+        <img src="{{ p.imagen.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+        {% else %}
+        <div class="align-items-center"><!--centrar -->
+          <span class="text-white">Sin imagen</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body"><!--cuerpo de tarjeta -->
+          <h5 class="card-title">{{ p.titulo }}</h5>
+          <p class="card-text">{{ p.descripcion }}</p>
+        </div>
+        <div class="card-footer"><!--seccion inferior de tarjeta-->
+          {{p.fecha_creacion}}
+        </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+</body>
 </html>
