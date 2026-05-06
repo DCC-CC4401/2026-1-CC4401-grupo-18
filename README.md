@@ -2,7 +2,7 @@
 
 Página web que ofrece una plataforma para poder publicar ventas y revisar productos disponibles en la facultad.
 
-# URLs disponibles
+## URLs disponibles
 
 ```md
 /publicaciones
@@ -10,7 +10,7 @@ Página web que ofrece una plataforma para poder publicar ventas y revisar produ
 /buscar
 ```
 
-# Acceso a admin
+## Acceso a admin
 
 Con esta cuenta se pueden crear publicaciones y categorias de manera
 intuitiva con la GUI de `/admin` que trae integrada Django.
