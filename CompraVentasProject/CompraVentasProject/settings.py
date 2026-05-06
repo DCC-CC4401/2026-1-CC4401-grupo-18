@@ -126,7 +126,7 @@ STATIC_URL = "static/"
 # Media storage
 
 # https://docs.djangoproject.com/en/6.0/ref/settings/#media-root
-MEDIA_ROOT = BASE_DIR
+MEDIA_ROOT = BASE_DIR 
 
 # https://docs.djangoproject.com/en/6.0/ref/settings/#media-url
 MEDIA_URL = "/media/"
