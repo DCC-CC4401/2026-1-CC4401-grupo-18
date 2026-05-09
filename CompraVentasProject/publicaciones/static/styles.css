@@ -4420,6 +4420,46 @@ textarea.form-control-lg {
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
   border-radius: var(--bs-card-border-radius);
 }
+/*keyframes es la animacion de las cartas */
+
+@keyframes subirDesdeAbajo {
+  from {/*estado inicial */
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;/*estado final */
+    transform: translateY(0);
+  }
+}
+
+.col {
+  animation: subirDesdeAbajo 0.5s ease forwards;/*ejecuta movimiento, forwards hace que se quede en estado final */
+  opacity: 0; /*evitar parpadeos*/
+}
+
+
+.card {
+  transition: transform 0.2s !important; /* transformaciones duran 0.2 */
+}
+
+.card:hover {
+  transform: translateY(-5px) !important;/*poner el cursor encima hace que se mueva */
+}
+
+.hero {
+  background-image: url('https://ingenieria.uchile.cl/.resources/portal-ingenieria/images/fcfm.png');
+  background-size: cover;/* cubra el area*/
+  background-position: center;/* centrado */
+  padding: 80px 20px;
+}
+
+.card {
+  border-top: 4px solid var(--bs-primary) !important;/* borde de las cards, en azul*/
+  border-radius: 12px !important;/* redondea esquinas*/
+}
+
+
 .card > hr {
   margin-right: 0;
   margin-left: 0;

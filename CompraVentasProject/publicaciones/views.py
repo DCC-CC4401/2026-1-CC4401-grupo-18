@@ -5,11 +5,16 @@ from publicaciones.models import Categoria, Publicacion
 def publicaciones(request):
   publicaciones = Publicacion.objects.all()
   categorias = Categoria.objects.all()
+  c_id = request.GET.get('categoria', '')
+
+  if c_id:
+    publicaciones = publicaciones.filter(categorias__id=c_id)
   
   if request.method == "GET":
     return render(request, "publicaciones/pagina_principal.html", {
       'publicaciones':publicaciones,
-      'categorias':categorias
+      'categorias':categorias,
+      'c_activa':c_id
     })
 
 

@@ -4,29 +4,40 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Compra/Venta FCFM</title>
+  <title>Compra y Vende FCFM</title>
   <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 
-<div>
-  <h1 class="display-6 text-primary text-center">Compra y vende</h1><!-- tamaño, color, centrado-->
-  <p class="fw-bold text-primary text-center">en la FCFM</p><!--cursiva, color, centrado -->
+<!-----------------TITULO Y BUSCADOR ----------------------->
+<div class="bg-primary">
+  <h1 class="display-6 text-center" style="color:lightpink;font-family: 'Lobster', cursive;">Compra y vende</h1><!-- tamaño, color, centrado-->
+  <p class="fw-bold text-center" style="color:rgb(255, 255, 255);">en la FCFM</p><!--cursiva, color, centrado -->
+  <div class="d-flex justify-content-center"><!--activar alineacion(boton al lado de boton), centrado -->
+    <form class="w-50"><!--controla ancho -->
+    <div class="hero input-group">
+      <input type="text" placeholder="Buscar..." class="form-control rounded-start-pill"><!--estilizar input, redondo -->
+      <button type="submit" class="btn btn-light rounded-end-pill">Buscar</button><!-- btn, claro, redondo-->
+    </div>
+  </form>
+  </div>
 </div>
 
-
-<div>
-  <!-- poner aqui el buscador o en vola mas arriba-->
-</div>
-
- <!-- -->
+<!-----------------CATEGORIAS ----------------------->
 <body>
-<!--para mostrar las categorias -->
-{% if categorias %}
- <!-- poner la categorizacion, y mostrar las publis q son de esa categoria, recorriendo con for-->
+{% if categorias %}<!-- si hay categorias, entonces-->
+<div class="d-flex gap-2 p-3 flex-wrap"><!-- alineacion botones, espacio entre btn, padding en btn, saltar fila si no caben-->
+  <a href="/publicaciones/" class="btn btn-primary btn-sm rounded-pill">Todas</a><!--bnt redondo que muestra todas las categorias -->
+  {% for c in categorias %}
+  <!-- href tiene ?categoria pues esto no crea una URL nueva y django la toma como publicaciones noma-->
+  <a href="/publicaciones/?categoria={{ c.id }}" class="btn btn-sm rounded-pill {% if c_activa == c.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+    {{ c.nombre }}
+  </a>
+  {% endfor %}
+</div>
 {% endif %}
 
-
-<div class="row row-cols-md-3 g-4"> <!--filas, pantallas medianas muestra 3 img, gap tamaño 4 -->
+<!-----------------PUBLICACIONES ----------------------->
+<div class="row row-cols-md-3 g-4"> <!--filas, en pantallas medianas muestra 3 img, gap tamaño 4 -->
   {% for p in publicaciones %}
   <div class="col">
     <div class="card h-100 bs-purple"> <!--estilo tarjeta, que ocupen todo el area -->
@@ -39,10 +50,17 @@
         {% endif %}
 
         <div class="card-body"><!--cuerpo de tarjeta -->
-          <h5 class="card-title">{{ p.titulo }}</h5>
-          <p class="card-text">{{ p.descripcion }}</p>
+          <h5 class="card-title text-white">{{ p.titulo }}</h5>
+          <p class="card-text text-white">{{ p.descripcion }}</p>
+          <!-- categorias de publicacion-->
+           <div class="d-flex gap-1 flex-wrap">
+            {% for c in p.categorias.all %}
+            <span class="badge bg-primary rounded-pill">{{ c.nombre }}</span><!-- estilo etiqueta, fondo azul, redondo-->
+            {% endfor %}
+          </div>
+
         </div>
-        <div class="card-footer"><!--seccion inferior de tarjeta-->
+        <div class="card-footer text-white"><!--seccion inferior de tarjeta-->
           {{p.fecha_creacion}}
         </div>
     </div>
