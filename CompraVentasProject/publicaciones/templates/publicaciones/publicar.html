@@ -1,36 +1,202 @@
-n <!DOCTYPE html>
-<html >
+{% load static %}
+<!DOCTYPE html>
+<html>
   <head>
-      <meta charset="UTF-8">
-      <title>Publicar</title>
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Publicar</title>
 
-      <style>
-        .contenedor{
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-        }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 
-        .caja{
-          border: 1px solid #0a0a0a;
-          border-radius: 10px;
-          padding: 30px;
-          text-align: center;
+    <style>
+      body {
+        background-color: #f4f4f4;
+      }
 
-        }
-      </style>
+      .contenedor-publicacion {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
 
+      .formulario-caja {
+        background-color: white;
+        border-radius: 16px;
+        padding: 35px;
+        width: 100%;
+        max-width: 650px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .titulo-formulario {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #0d6efd;
+        font-weight: bold;
+      }
+
+      .campo-formulario {
+        margin-bottom: 18px;
+      }
+
+      .campo-formulario label {
+        font-weight: bold;
+      }
+
+      .error-campo {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 4px;
+      }
+
+      .categorias-lista ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+      }
+
+      .categorias-lista li {
+        margin-bottom: 5px;
+      }
+
+      .modal-confirmacion {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.55);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-confirmacion.activo {
+        display: flex;
+      }
+
+      .caja-confirmacion {
+        background-color: white;
+        border: 1px solid #0a0a0a;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        width: 90%;
+        max-width: 420px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .botones-confirmacion {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .asterisco-obligatorio {
+        color: red;
+        font-weight: bold;
+        margin-left: 4px;
+      }
+    </style>
   </head>
+
   <body>
-    <div class= "contenedor"> 
-        <div class ="caja">
-          <p>¿Estás seguro que deseas agregar esta publicación?</p>
-          <button class="btn btn-primary">Publicar</button>
-          <a href="{%url 'publicaciones' %}" class = "btn btn-danger">Regresar</a>
-        </div>  
+    <div class="contenedor-publicacion">
+      <div class="formulario-caja">
+        <h1 class="titulo-formulario">Crear publicación</h1>
+
+        <form id="form-publicacion" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% if form_publicacion.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form_publicacion.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="campo-formulario">
+            <label for="{{ form_publicacion.titulo.id_for_label }}">Título<span class="asterisco-obligatorio">*</span></label>
+            {{ form_publicacion.titulo }}
+
+            {% for error in form_publicacion.titulo.errors %}
+              <div class="error-campo">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="campo-formulario">
+            <label for="{{ form_publicacion.imagen.id_for_label }}">Imagen<span class="asterisco-obligatorio">*</span></label>
+            {{ form_publicacion.imagen }}
+
+            {% for error in form_publicacion.imagen.errors %}
+              <div class="error-campo">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="campo-formulario">
+            <label for="{{ form_publicacion.descripcion.id_for_label }}">Descripción<span class="asterisco-obligatorio">*</span></label>
+            {{ form_publicacion.descripcion }}
+
+            {% for error in form_publicacion.descripcion.errors %}
+              <div class="error-campo">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="campo-formulario categorias-lista">
+            <label>Categorías</label>
+            {{ form_publicacion.categorias }}
+
+            {% for error in form_publicacion.categorias.errors %}
+              <div class="error-campo">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'publicaciones' %}" class="btn btn-danger">Regresar</a>
+            <button type="button" id="abrir-confirmacion" class="btn btn-primary">Publicar</button>
+          </div>
+        </form>
+      </div>
     </div>
 
+    <div id="modal-confirmacion" class="modal-confirmacion">
+      <div class="caja-confirmacion">
+        <p>¿Estás seguro que deseas agregar esta publicación?</p>
+
+        <div class="botones-confirmacion">
+          <button type="button" id="confirmar-publicacion" class="btn btn-primary">
+            Publicar
+          </button>
+
+          <button type="button" id="cancelar-confirmacion" class="btn btn-danger">
+            Regresar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const formulario = document.getElementById("form-publicacion");
+      const modal = document.getElementById("modal-confirmacion");
+      const botonAbrir = document.getElementById("abrir-confirmacion");
+      const botonCancelar = document.getElementById("cancelar-confirmacion");
+      const botonConfirmar = document.getElementById("confirmar-publicacion");
+
+      botonAbrir.addEventListener("click", function () {
+        if (formulario.checkValidity()) {
+          modal.classList.add("activo");
+        } else {
+          formulario.reportValidity();
+        }
+      });
+
+      botonCancelar.addEventListener("click", function () {
+        modal.classList.remove("activo");
+      });
+
+      botonConfirmar.addEventListener("click", function () {
+        formulario.submit();
+      });
+    </script>
   </body>
+</html>
