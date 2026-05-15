@@ -15,17 +15,19 @@ class PublicacionForm(forms.ModelForm):
         }
 
         widgets = {
-            "titulo": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Ej: Alfajor artesanal"
-            }),
-            "descripcion": forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": 4,
-                "placeholder": "Describe el producto, precio, estado, forma de entrega, etc."
-            }),
-            "imagen": forms.ClearableFileInput(attrs={
-                "class": "form-control"
-            }),
-            "categorias": forms.CheckboxSelectMultiple()
+            "titulo": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ej: Alfajor artesanal",
+                },
+            ),
+            "descripcion": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Describe el producto, precio, estado, forma de entrega, etc.",
+                },
+            ),
+            "imagen": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "categorias": forms.CheckboxSelectMultiple(),
         }

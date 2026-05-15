@@ -1,5 +1,4 @@
-"""
-WSGI config for CompraVentasProject project.
+"""WSGI config for CompraVentasProject project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

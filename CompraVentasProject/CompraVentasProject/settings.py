@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-
 # Build paths inside the project like this:
 # BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,7 +125,7 @@ STATIC_URL = "static/"
 # Media storage
 
 # https://docs.djangoproject.com/en/6.0/ref/settings/#media-root
-MEDIA_ROOT = BASE_DIR 
+MEDIA_ROOT = BASE_DIR
 
 # https://docs.djangoproject.com/en/6.0/ref/settings/#media-url
 MEDIA_URL = "/media/"
