@@ -15,6 +15,7 @@ class PublicacionForm(forms.ModelForm):
         }
 
         widgets = {
+<<<<<<< Updated upstream
             "titulo": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Ej: Alfajor artesanal"
@@ -28,4 +29,25 @@ class PublicacionForm(forms.ModelForm):
                 "class": "form-control"
             }),
             "categorias": forms.CheckboxSelectMultiple()
+=======
+            "titulo": forms.TextInput(
+                attrs={
+                    "class": "form-control form-input",
+                    "placeholder": "Ej: Alfajor artesanal",
+                },
+            ),
+            "descripcion": forms.Textarea(
+                attrs={
+                    "class": "form-control form-input form-textarea",
+                    "rows": 5,
+                    "placeholder": "Describe el producto, precio, estado, forma de entrega, etc.",
+                },
+            ),
+            "imagen": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control form-input",
+                },
+            ),
+            "categorias": forms.CheckboxSelectMultiple(),
+>>>>>>> Stashed changes
         }
