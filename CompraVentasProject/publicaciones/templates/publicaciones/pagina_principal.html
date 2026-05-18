@@ -1,7 +1,80 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-  <h1>
-    Pagina Principal de publicaciones
-  </h1>
 
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Compra y Vende FCFM</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<!-----------------TITULO Y BUSCADOR ----------------------->
+<div class="bg-primary">
+  <h1 class="display-6 text-center" style="color:lightpink;font-family: 'Lobster', cursive;">Compra y vende</h1><!-- tamaño, color, centrado-->
+  <p class="fw-bold text-center" style="color:rgb(255, 255, 255);">en la FCFM</p><!--cursiva, color, centrado -->
+  <div class="d-flex justify-content-center"><!--activar alineacion(boton al lado de boton), centrado -->
+    <form class="w-50"><!--controla ancho -->
+    <div class="hero input-group">
+      <input type="text" placeholder="Buscar..." class="form-control rounded-start-pill"><!--estilizar input, redondo -->
+      <button type="submit" class="btn btn-light rounded-end-pill">Buscar</button><!-- btn, claro, redondo-->
+    </div>
+  </form>
+  </div>
+
+  <div class="text-center mt-3 pb-3">
+  <a href="{% url 'publicar' %}" class="btn btn-light rounded-pill">
+    Crear publicación
+  </a>
+</div>
+
+</div>
+
+<!-----------------CATEGORIAS ----------------------->
+<body>
+{% if categorias %}<!-- si hay categorias, entonces-->
+<div class="d-flex gap-2 p-3 flex-wrap"><!-- alineacion botones, espacio entre btn, padding en btn, saltar fila si no caben-->
+  <a href="/publicaciones/" class="btn btn-primary btn-sm rounded-pill">Todas</a><!--bnt redondo que muestra todas las categorias -->
+  {% for c in categorias %}
+  <!-- href tiene ?categoria pues esto no crea una URL nueva y django la toma como publicaciones noma-->
+  <a href="/publicaciones/?categoria={{ c.id }}" class="btn btn-sm rounded-pill {% if c_activa == c.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+    {{ c.nombre }}
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-----------------PUBLICACIONES ----------------------->
+<div class="row row-cols-md-3 g-4"> <!--filas, en pantallas medianas muestra 3 img, gap tamaño 4 -->
+  {% for p in publicaciones %}
+  <div class="col">
+    <div class="card h-100 bs-purple"> <!--estilo tarjeta, que ocupen todo el area -->
+        {% if p.imagen %}
+        <img src="{{ p.imagen.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+        {% else %}
+        <div class="align-items-center"><!--centrar -->
+          <span class="text-white">Sin imagen</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body"><!--cuerpo de tarjeta -->
+          <h5 class="card-title text-white">{{ p.titulo }}</h5>
+          <p class="card-text text-white">{{ p.descripcion }}</p>
+          <!-- categorias de publicacion-->
+           <div class="d-flex gap-1 flex-wrap">
+            {% for c in p.categorias.all %}
+            <span class="badge bg-primary rounded-pill">{{ c.nombre }}</span><!-- estilo etiqueta, fondo azul, redondo-->
+            {% endfor %}
+          </div>
+
+        </div>
+        <div class="card-footer text-white"><!--seccion inferior de tarjeta-->
+          {{p.fecha_creacion}}
+        </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+</body>
 </html>
