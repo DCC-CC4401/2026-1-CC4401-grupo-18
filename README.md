@@ -188,11 +188,5 @@ Password: 12345678
 
 ---
 
-## 📝 Contexto académico
-
-Este proyecto es desarrollado en el marco de las actividades del curso **CC4401 — Ingeniería de Software** del Departamento de Ciencias de la Computación, Universidad de Chile.
-
-[![CC BY-NC 4.0](https://img.shields.io/badge/Licencia-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
-
 
 
