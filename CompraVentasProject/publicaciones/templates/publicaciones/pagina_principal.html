@@ -5,76 +5,157 @@
 <head>
   <meta charset="UTF-8">
   <title>Compra y Vende FCFM</title>
+
   <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<!-----------------TITULO Y BUSCADOR ----------------------->
-<div class="bg-primary">
-  <h1 class="display-6 text-center" style="color:lightpink;font-family: 'Lobster', cursive;">Compra y vende</h1><!-- tamaño, color, centrado-->
-  <p class="fw-bold text-center" style="color:rgb(255, 255, 255);">en la FCFM</p><!--cursiva, color, centrado -->
-  <div class="d-flex justify-content-center"><!--activar alineacion(boton al lado de boton), centrado -->
-    <form class="w-50"><!--controla ancho -->
-    <div class="hero input-group">
-      <input type="text" placeholder="Buscar..." class="form-control rounded-start-pill"><!--estilizar input, redondo -->
-      <button type="submit" class="btn btn-light rounded-end-pill">Buscar</button><!-- btn, claro, redondo-->
+<body id="inicio">
+
+  <section class="hero">
+    <div class="hero-deco hero-deco-1"></div>
+    <div class="hero-deco hero-deco-2"></div>
+
+    <nav class="top-nav">
+      <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
+        <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
+        <li><a href="{% url 'publicar' %}">Publicar</a></li>
+      </ul>
+
+      <div class="nav-icons">
+        <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-tag">✦ Marketplace Universitario</div>
+
+      <div class="hero-title-row">
+        <div class="hero-title">
+          <em>Compra y vende en</em>
+          FCFM
+        </div>
+
+        <div class="hero-search">
+          <form method="get" action="{% url 'publicaciones' %}#publicaciones">
+            {% if c_activa %}
+              <input type="hidden" name="categoria" value="{{ c_activa }}">
+            {% endif %}
+
+            <div class="input-group">
+              <input
+                type="text"
+                name="q"
+                value="{{ q }}"
+                placeholder="¿Qué estás buscando?"
+              >
+              <button type="submit">Buscar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  </form>
-  </div>
 
-  <div class="text-center mt-3 pb-3">
-  <a href="{% url 'publicar' %}" class="btn btn-light rounded-pill">
-    Crear publicación
-  </a>
-</div>
+    <a href="#publicaciones" class="scroll-hint">
+      <span class="arrow">↓</span>
+      ver publicaciones
+    </a>
+  </section>
 
-</div>
+  <main id="publicaciones" class="market-section">
 
-<!-----------------CATEGORIAS ----------------------->
-<body>
-{% if categorias %}<!-- si hay categorias, entonces-->
-<div class="d-flex gap-2 p-3 flex-wrap"><!-- alineacion botones, espacio entre btn, padding en btn, saltar fila si no caben-->
-  <a href="/publicaciones/" class="btn btn-primary btn-sm rounded-pill">Todas</a><!--bnt redondo que muestra todas las categorias -->
-  {% for c in categorias %}
-  <!-- href tiene ?categoria pues esto no crea una URL nueva y django la toma como publicaciones noma-->
-  <a href="/publicaciones/?categoria={{ c.id }}" class="btn btn-sm rounded-pill {% if c_activa == c.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-    {{ c.nombre }}
-  </a>
-  {% endfor %}
-</div>
-{% endif %}
+    <div class="section-header">
+      <div class="section-title-block">
+        <div class="big">Publicaciones</div>
+        <div class="sub">lo que ofrece la comunidad</div>
+      </div>
 
-<!-----------------PUBLICACIONES ----------------------->
-<div class="row row-cols-md-3 g-4"> <!--filas, en pantallas medianas muestra 3 img, gap tamaño 4 -->
-  {% for p in publicaciones %}
-  <div class="col">
-    <div class="card h-100 bs-purple"> <!--estilo tarjeta, que ocupen todo el area -->
-        {% if p.imagen %}
-        <img src="{{ p.imagen.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-        {% else %}
-        <div class="align-items-center"><!--centrar -->
-          <span class="text-white">Sin imagen</span>
-        </div>
-        {% endif %}
-
-        <div class="card-body"><!--cuerpo de tarjeta -->
-          <h5 class="card-title text-white">{{ p.titulo }}</h5>
-          <p class="card-text text-white">{{ p.descripcion }}</p>
-          <!-- categorias de publicacion-->
-           <div class="d-flex gap-1 flex-wrap">
-            {% for c in p.categorias.all %}
-            <span class="badge bg-primary rounded-pill">{{ c.nombre }}</span><!-- estilo etiqueta, fondo azul, redondo-->
-            {% endfor %}
-          </div>
-
-        </div>
-        <div class="card-footer text-white"><!--seccion inferior de tarjeta-->
-          {{p.fecha_creacion}}
-        </div>
+      <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
     </div>
-  </div>
-  {% endfor %}
-</div>
 
+    {% if q or c_activa %}
+      <div class="filter-status">
+        <div>
+          {% if q %}
+            <span>Resultados para: <strong>{{ q }}</strong></span>
+          {% endif %}
+
+          {% if c_activa %}
+            <span class="filter-dot">•</span>
+            <span>Categoría filtrada</span>
+          {% endif %}
+        </div>
+
+        <a href="{% url 'publicaciones' %}#publicaciones">Limpiar filtros</a>
+      </div>
+    {% endif %}
+
+    {% if categorias %}
+      <div class="cat-bar">
+        <a
+          href="{% url 'publicaciones' %}{% if q %}?q={{ q|urlencode }}{% endif %}#publicaciones"
+          class="cat-pill {% if not c_activa %}activo{% endif %}"
+        >
+          Todas
+        </a>
+
+        {% for c in categorias %}
+          <a
+            href="{% url 'publicaciones' %}?categoria={{ c.id }}{% if q %}&q={{ q|urlencode }}{% endif %}#publicaciones"
+            class="cat-pill {% if c_activa == c.id|stringformat:'s' %}activo{% endif %}"
+          >
+            {{ c.nombre }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="cards-section">
+      {% if publicaciones %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+          {% for p in publicaciones %}
+            <div class="col">
+              <article class="card h-100">
+
+                <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
+
+                <div class="card-body">
+                  <h5 class="card-title">{{ p.titulo }}</h5>
+                  <p class="card-desc">{{ p.descripcion }}</p>
+
+                  <div class="card-categories">
+                    {% for c in p.categorias.all %}
+                      <span class="category-badge">{{ c.nombre }}</span>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
+                  <span class="btn-ver">Publicado</span>
+                </div>
+
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <p>No hay publicaciones con ese criterio.</p>
+          <a href="{% url 'publicaciones' %}#publicaciones" class="btn-publicar">
+            Ver todas
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+  <a href="{% url 'publicar' %}" class="fab" title="Nueva publicación">＋</a>
 
 </body>
 </html>
