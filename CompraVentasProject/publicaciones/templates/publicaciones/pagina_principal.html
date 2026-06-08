@@ -5,135 +5,155 @@
 <head>
   <meta charset="UTF-8">
   <title>Compra y Vende FCFM</title>
-  <!-- cargar bootstrap y luego css -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{% static 'styles2.css' %}">
-  <!--font de las letras --> 
+
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<!-----------------TITULO Y BUSCADOR ----------------------->
+<body id="inicio">
 
-<!-- contenedor con los esilos de hero -->
-<section class="hero">
-  <div class="hero-deco hero-deco-1"></div>
-  <div class="hero-deco hero-deco-2"></div>
-  <!-- contenedor con estilos de navbar(texto y botones superiores) -->
-  <nav class="top-nav">
-    <span class="nav-brand">Nóctulos FCFM</span>
+  <section class="hero">
+    <div class="hero-deco hero-deco-1"></div>
+    <div class="hero-deco hero-deco-2"></div>
 
-    <ul class="nav-links"><!-- links -->
-      <li><a href="/publicaciones/">Publicaciones</a></li>
-      <li><a href="/publicar/">Publicar</a></li>
-    </ul>
-    <!-- boton + para crear publicacion -->
-    <div class="nav-icons">
-      <a href="/publicar/" title="Nueva publicación">+</a>
-    </div>
-  </nav>
- 
-    <!-- texto principal -->
+    <nav class="top-nav">
+      <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
+        <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
+        <li><a href="{% url 'publicar' %}">Publicar</a></li>
+      </ul>
+
+      <div class="nav-icons">
+        <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+      </div>
+    </nav>
+
     <div class="hero-content">
-      <div class="hero-tag"> Marketplace Universitario</div>
+      <div class="hero-tag">✦ Marketplace Universitario</div>
+
       <div class="hero-title-row">
         <div class="hero-title">
           <em>Compra y vende en</em>
           FCFM
         </div>
-        <!-- buscador -->
+
         <div class="hero-search">
-          <form method="get" action="/publicaciones/">
+          <form method="get" action="{% url 'publicaciones' %}#publicaciones">
+            {% if c_activa %}
+              <input type="hidden" name="categoria" value="{{ c_activa }}">
+            {% endif %}
+
             <div class="input-group">
-              <input type="text" name="q"
-                     value="{{ request.GET.q }}"
-                     placeholder="¿Qué estás buscando?">
+              <input
+                type="text"
+                name="q"
+                value="{{ q }}"
+                placeholder="¿Qué estás buscando?"
+              >
               <button type="submit">Buscar</button>
             </div>
           </form>
         </div>
       </div>
     </div>
- 
-    <div class="scroll-hint">
+
+    <a href="#publicaciones" class="scroll-hint">
       <span class="arrow">↓</span>
       ver publicaciones
-    </div>
+    </a>
   </section>
 
-<!----------------- SECTION HEADER ----------------------->
-  <div class="section-header">
-    <div class="section-title-block">
-      <div class="big">Publicaciones</div>
-      <div class="sub">lo que ofrece la comunidad</div>
-    </div>
-    <a href="/publicar/" class="btn-publicar">+ Nueva publicación</a>
-  </div>
- 
-  <!----------------- CATEGORIAS ----------------------->
-  {% if categorias %}
-  <div class="cat-bar">
-    <a href="/publicaciones/"
-       class="cat-pill {% if not c_activa %}activo{% endif %}">Todas</a>
-    {% for c in categorias %}
-      <a href="/publicaciones/?categoria={{ c.id }}"
-         class="cat-pill {% if c_activa == c.id|stringformat:'s' %}activo{% endif %}">
-        {{ c.nombre }}
-      </a>
-    {% endfor %}
-  </div>
-  {% endif %}
- 
-  <!----------------- PUBLICACIONES EN CARD ----------------------->
-  <div class="cards-section">
-    {% if publicaciones %}
-      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
-        {% for p in publicaciones %}
-        <div class="col">
-          <div class="card h-100">
-      
-            {% if p.imagen %}
-            <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
-            <!-- no ocurre caso donde no hay img -->
-            {% endif %}
+  <main id="publicaciones" class="market-section">
 
-            <!-- cycle es para rotar entre esos valores por iteracion-->
-            <div class="card-body">
-              <h5 class="card-title">{{ p.titulo }}</h5>
-              <p class="card-desc">{{ p.descripcion }}</p>
-              <div class="d-flex gap-1 flex-wrap">
-              {% for c in p.categorias.all %}
-              <!-- cicla los colores de los tipo de categorias, OJO HAY QUE CAMBIARLO -->
-               <!--YA QUE TODAS LAS PILDORAS SALEN DISTINTO, es decir, pueden haber categoraia ropa con 2 colores-->
-               <!--distintos, que es poco intuitivo(pega para sprint 2) -->
-              <span class="badge rounded-pill {% cycle 'bg-primary' 'bg-secondary' 'bg-success' 'bg-info' %}">
-                {{ c.nombre }}
-              </span>
-              {% endfor %}
-              </div>
-            </div>
- 
-            <div class="card-footer">
-              <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
-              <a href="/publicaciones/{{ p.pk }}/" class="btn-ver">Ver más →</a>
-            </div>
- 
-          </div>
-        </div>
-        {% endfor %}
+    <div class="section-header">
+      <div class="section-title-block">
+        <div class="big">Publicaciones</div>
+        <div class="sub">lo que ofrece la comunidad</div>
       </div>
- 
-    {% else %}
-    <!-- caso no se encontro busqueda-->
-    <div class="empty-state">
-      <div class="icon">🔍</div>
-        <p>No hay publicaciones con ese criterio.</p>
-        <a href="/publicaciones/" class="btn btn-primary rounded-pill mt-3">Ver todas</a>
+
+      <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
+    </div>
+
+    {% if q or c_activa %}
+      <div class="filter-status">
+        <div>
+          {% if q %}
+            <span>Resultados para: <strong>{{ q }}</strong></span>
+          {% endif %}
+
+          {% if c_activa %}
+            <span class="filter-dot">•</span>
+            <span>Categoría filtrada</span>
+          {% endif %}
+        </div>
+
+        <a href="{% url 'publicaciones' %}#publicaciones">Limpiar filtros</a>
       </div>
     {% endif %}
+
+    {% if categorias %}
+      <div class="cat-bar">
+        <a
+          href="{% url 'publicaciones' %}{% if q %}?q={{ q|urlencode }}{% endif %}#publicaciones"
+          class="cat-pill {% if not c_activa %}activo{% endif %}"
+        >
+          Todas
+        </a>
+
+        {% for c in categorias %}
+          <a
+            href="{% url 'publicaciones' %}?categoria={{ c.id }}{% if q %}&q={{ q|urlencode }}{% endif %}#publicaciones"
+            class="cat-pill {% if c_activa == c.id|stringformat:'s' %}activo{% endif %}"
+          >
+            {{ c.nombre }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="cards-section">
+      {% if publicaciones %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+          {% for p in publicaciones %}
+            <div class="col">
+              <article class="card h-100">
+
+                <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
+
+                <div class="card-body">
+                  <h5 class="card-title">{{ p.titulo }}</h5>
+                  <p class="card-desc">{{ p.descripcion }}</p>
+
+                  <div class="card-categories">
+                    {% for c in p.categorias.all %}
+                      <span class="category-badge">{{ c.nombre }}</span>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
+                  <span class="btn-ver">Publicado</span>
+                </div>
+
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <p>No hay publicaciones con ese criterio.</p>
+          <a href="{% url 'publicaciones' %}#publicaciones" class="btn-publicar">
+            Ver todas
+          </a>
+        </div>
+      {% endif %}
     </div>
- 
-  <!-- FAB -->
+  </main>
   <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
- 
 </body>
 </html>
