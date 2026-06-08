@@ -18,6 +18,7 @@ Página web desarrollada con Django mediante la cual la comunidad integrante de 
 - 🔍 **Búsqueda de productos** — se encuentran productos o servicios específicos.
 - 📝 **Publicar productos** — formulario para subir título, descripción, imagen y categorías de los productos.
 - 🗂️ **Panel de administración** — gestión completa de publicaciones y categorías desde `/admin`
+
 ---
 
 ## 🛠️ Tecnologías
@@ -61,22 +62,26 @@ venv\Scripts\activate
 ```
 
 **3. Instalar dependencias**
+
 ```bash
 pip install -r requirements.txt
 ```
 
 **4. Aplicar migraciones**
+
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
 **5. (Opcional) Crear un superusuario propio**
+
 ```bash
 python manage.py createsuperuser
 ```
 
 **6. Levantar el servidor de desarrollo**
+
 ```bash
 python manage.py runserver
 ```
