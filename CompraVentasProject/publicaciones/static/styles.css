@@ -14,9 +14,22 @@ body {
   color: #1a1a1a;
 }
 
+body.modal-abierto {
+  overflow: hidden;
+}
+
 a {
   text-decoration: none;
 }
+
+input,
+textarea,
+select,
+button {
+  font-family: 'Nunito', sans-serif;
+}
+
+/* -------- NAVBAR -------- */
 
 .top-nav {
   position: absolute;
@@ -70,10 +83,11 @@ a {
   font-weight: 900;
 }
 
-.hero {
+/* -------- HERO -------- */
+
+.hero,
+.publicar-hero {
   position: relative;
-  height: 92vh;
-  min-height: 560px;
   background-image:
     linear-gradient(
       to bottom,
@@ -83,10 +97,21 @@ a {
     ),
     url('https://ingenieria.uchile.cl/dam/jcr:ab4e85b1-49b2-48e3-88ae-7cdd2f2507c6/sobre-la-fcfm-header.jpg');
   background-size: cover;
-  background-position: center 30%;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
+}
+
+.hero {
+  height: 92vh;
+  min-height: 560px;
+  background-position: center 30%;
+}
+
+.publicar-hero {
+  height: 42vh;
+  min-height: 330px;
+  background-position: center 35%;
 }
 
 .hero-deco {
@@ -109,11 +134,20 @@ a {
   left: -70px;
 }
 
-.hero-content {
+.hero-content,
+.publicar-hero-content {
   position: relative;
   z-index: 2;
+  color: #fff;
+}
+
+.hero-content {
   padding: 0 48px 64px;
   width: 100%;
+}
+
+.publicar-hero-content {
+  padding: 0 48px 52px;
 }
 
 .hero-tag {
@@ -150,15 +184,31 @@ a {
 }
 
 .hero-title em {
+  display: block;
   font-style: italic;
   font-weight: 400;
   font-size: 0.38em;
   letter-spacing: 0;
   text-transform: none;
-  display: block;
   color: rgba(255, 255, 255, 0.76);
   margin-bottom: 6px;
 }
+
+.publicar-hero-content h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -2px;
+  margin-bottom: 12px;
+}
+
+.publicar-hero-content p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1rem;
+}
+
+/* -------- BUSCADOR -------- */
 
 .hero-search {
   max-width: 410px;
@@ -201,6 +251,7 @@ a {
   margin: 5px;
   font-size: 0.82rem;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .hero-search button:hover {
@@ -243,7 +294,11 @@ a {
   }
 }
 
-.market-section {
+/* -------- SECCIÓN PUBLICACIONES -------- */
+
+.market-section,
+.cards-section,
+.publicar-body {
   background: #fafafa;
 }
 
@@ -273,9 +328,8 @@ a {
 }
 
 .btn-publicar,
-.btn-principal {
-  background: #78c2ad;
-  color: #fff;
+.btn-principal,
+.btn-secundario {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 0.82rem;
@@ -284,6 +338,13 @@ a {
   border: none;
   transition: background 0.2s, transform 0.2s;
   display: inline-block;
+  cursor: pointer;
+}
+
+.btn-publicar,
+.btn-principal {
+  background: #78c2ad;
+  color: #fff;
 }
 
 .btn-publicar:hover,
@@ -296,14 +357,6 @@ a {
 .btn-secundario {
   background: #f2f2f2;
   color: #555;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 0.82rem;
-  padding: 10px 22px;
-  border-radius: 12px;
-  border: none;
-  transition: background 0.2s, transform 0.2s;
-  display: inline-block;
 }
 
 .btn-secundario:hover {
@@ -332,6 +385,8 @@ a {
   color: #ccc;
   margin: 0 8px;
 }
+
+/* -------- CATEGORÍAS -------- */
 
 .cat-bar {
   background: #fff;
@@ -365,9 +420,10 @@ a {
   border-color: #78c2ad;
 }
 
+/* -------- CARDS -------- */
+
 .cards-section {
   padding: 30px 48px 72px;
-  background: #fafafa;
 }
 
 .row {
@@ -516,11 +572,25 @@ a {
   border-radius: 50px;
   background: #f2f2f2;
   color: #555;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
+
+.btn-ver:hover {
+  background: #e4f3ef;
+  color: #5ba893;
+}
+
+/* -------- EMPTY Y FAB -------- */
 
 .empty-state {
   text-align: center;
   padding: 80px 20px;
+}
+
+.empty-state .btn-publicar {
+  margin-top: 12px;
 }
 
 .empty-state .icon {
@@ -558,49 +628,117 @@ a {
   color: #fff;
 }
 
-.publicar-body {
-  background: #fafafa;
+/* -------- MODAL VER MÁS -------- */
+
+.modal-publicacion {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  padding: 38px;
 }
 
-.publicar-hero {
-  position: relative;
-  height: 42vh;
-  min-height: 330px;
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(20, 15, 8, 0.42) 0%,
-      rgba(20, 15, 8, 0.16) 45%,
-      rgba(20, 15, 8, 0.70) 100%
-    ),
-    url('https://ingenieria.uchile.cl/dam/jcr:ab4e85b1-49b2-48e3-88ae-7cdd2f2507c6/sobre-la-fcfm-header.jpg');
-  background-size: cover;
-  background-position: center 35%;
+.modal-publicacion.activo {
   display: flex;
-  align-items: flex-end;
-  overflow: hidden;
 }
 
-.publicar-hero-content {
+.modal-publicacion-contenido {
   position: relative;
-  z-index: 2;
-  padding: 0 48px 52px;
-  color: #fff;
+  width: min(1180px, 94vw);
+  min-height: 76vh;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 42px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  animation: modalAparece 0.22s ease forwards;
 }
 
-.publicar-hero-content h1 {
+.modal-cerrar {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #f2f2f2;
+  color: #555;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modal-cerrar:hover {
+  background: #e4f3ef;
+  color: #5ba893;
+}
+
+.modal-publicacion-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 42px;
+  align-items: start;
+  padding-top: 28px;
+}
+
+.modal-publicacion-img {
+  width: 100%;
+  max-height: 56vh;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 20px;
+  background: #f7f7f7;
+}
+
+.modal-publicacion-titulo {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: clamp(2.4rem, 5vw, 4.8rem);
-  line-height: 0.95;
-  letter-spacing: -2px;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  color: #1a1a1a;
+  line-height: 1.15;
+  margin-top: 20px;
 }
 
-.publicar-hero-content p {
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 1rem;
+.modal-publicacion-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
+
+.modal-detalle {
+  background: #fafafa;
+  border: 1.5px solid #efefef;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.modal-detalle-label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #78c2ad;
+  margin-bottom: 10px;
+}
+
+.modal-detalle-texto {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* -------- FORMULARIO PUBLICAR -------- */
 
 .publicar-section {
   padding: 42px 20px 76px;
@@ -635,6 +773,7 @@ a {
 }
 
 .form-field {
+  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -647,38 +786,66 @@ a {
   display: inline-block;
 }
 
-.form-input {
+.form-input,
+.form-control,
+.form-field input[type="text"],
+.form-field input[type="file"],
+.form-field textarea {
+  display: block;
   width: 100%;
   border: 1.5px solid #e9e9e9;
   border-radius: 14px;
   padding: 12px 14px;
   color: #333;
+  background: #fff;
   font-size: 0.92rem;
   font-family: 'Nunito', sans-serif;
   font-weight: 600;
   outline: none;
+  box-shadow: none;
 }
 
-.form-input::placeholder {
+.form-input::placeholder,
+.form-control::placeholder,
+.form-field input::placeholder,
+.form-field textarea::placeholder {
   font-family: 'Nunito', sans-serif;
   font-weight: 400;
   color: #777;
 }
 
-input,
-textarea,
-select,
-button {
-  font-family: 'Nunito', sans-serif;
-}
-
-.form-input:focus {
+.form-input:focus,
+.form-control:focus,
+.form-field input:focus,
+.form-field textarea:focus {
   border-color: #78c2ad;
   box-shadow: 0 0 0 4px rgba(120, 194, 173, 0.14);
 }
 
-.form-textarea {
+.form-textarea,
+.form-field textarea {
+  min-height: 130px;
   resize: vertical;
+}
+
+.form-input::file-selector-button,
+.form-control::file-selector-button,
+.form-field input[type="file"]::file-selector-button {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  background: #e4f3ef;
+  color: #5ba893;
+  padding: 8px 12px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.form-input::file-selector-button:hover,
+.form-control::file-selector-button:hover,
+.form-field input[type="file"]::file-selector-button:hover {
+  background: #d8eee8;
 }
 
 .asterisco-obligatorio {
@@ -704,6 +871,7 @@ button {
 }
 
 .categoria-opciones {
+  width: 100%;
   background: #fafafa;
   border: 1.5px solid #efefef;
   border-radius: 16px;
@@ -742,9 +910,12 @@ button {
 .form-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   margin-top: 30px;
 }
+
+/* -------- MODAL CONFIRMACIÓN PUBLICAR -------- */
 
 .modal-confirmacion {
   display: none;
@@ -816,6 +987,8 @@ button {
   margin-top: 24px;
 }
 
+/* -------- RESPONSIVE -------- */
+
 @media (max-width: 768px) {
   .top-nav {
     padding: 16px 20px;
@@ -843,23 +1016,47 @@ button {
     padding-right: 16px;
   }
 
+  .section-header,
+  .form-actions,
+  .botones-confirmacion {
+    flex-direction: column;
+  }
+
   .section-header {
     align-items: flex-start;
-    flex-direction: column;
     gap: 16px;
   }
 
+  .modal-publicacion {
+    padding: 18px;
+  }
+
+  .modal-publicacion-contenido {
+    width: 100%;
+    min-height: 82vh;
+    max-height: 90vh;
+    padding: 34px 22px 24px;
+  }
+
+  .modal-publicacion-grid,
   .categoria-opciones ul {
     grid-template-columns: 1fr;
   }
 
-  .form-card {
-    padding: 24px;
+  .modal-publicacion-grid {
+    gap: 22px;
   }
 
-  .form-actions,
-  .botones-confirmacion {
-    flex-direction: column;
+  .modal-publicacion-img {
+    max-height: 42vh;
+  }
+
+  .modal-publicacion-titulo {
+    font-size: 1.45rem;
+  }
+
+  .form-card {
+    padding: 24px;
   }
 
   .btn-principal,
@@ -870,7 +1067,6 @@ button {
 }
 
 @media (max-width: 520px) {
-
   .hero {
     min-height: 520px;
   }

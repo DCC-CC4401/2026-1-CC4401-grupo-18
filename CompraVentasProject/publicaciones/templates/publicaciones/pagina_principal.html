@@ -135,7 +135,13 @@
 
                 <div class="card-footer">
                   <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
-                  <span class="btn-ver">Publicado</span>
+                  <button
+                    type="button"
+                    class="btn-ver btn-abrir-modal"
+                    data-modal="modal-publicacion-{{ p.id }}"
+                  >
+                    Ver más
+                  </button>
                 </div>
 
               </article>
@@ -148,12 +154,75 @@
           <div class="icon">🔍</div>
           <p>No hay publicaciones con ese criterio.</p>
           <a href="{% url 'publicaciones' %}#publicaciones" class="btn-publicar">
-            Ver todas
+            Ver todas las publicaciones
           </a>
         </div>
       {% endif %}
     </div>
   </main>
+
+  {% if publicaciones %}
+    {% for p in publicaciones %}
+      <div id="modal-publicacion-{{ p.id }}" class="modal-publicacion">
+        <div class="modal-publicacion-contenido">
+          <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
+
+          <div class="modal-publicacion-grid">
+            <div class="modal-publicacion-izquierda">
+              <img
+                src="{{ p.imagen.url }}"
+                class="modal-publicacion-img"
+                alt="{{ p.titulo }}"
+              >
+
+              <h2 class="modal-publicacion-titulo">{{ p.titulo }}</h2>
+            </div>
+
+            <div class="modal-publicacion-derecha">
+              <div class="modal-detalle">
+                <span class="modal-detalle-label">Descripción</span>
+                <p class="modal-detalle-texto">{{ p.descripcion }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
   <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
+
+  <script>
+    const botonesAbrirModal = document.querySelectorAll(".btn-abrir-modal");
+    const modalesPublicacion = document.querySelectorAll(".modal-publicacion");
+
+    botonesAbrirModal.forEach(function (boton) {
+      boton.addEventListener("click", function () {
+        const idModal = boton.getAttribute("data-modal");
+        const modal = document.getElementById(idModal);
+
+        if (modal) {
+          modal.classList.add("activo");
+          document.body.classList.add("modal-abierto");
+        }
+      });
+    });
+
+    modalesPublicacion.forEach(function (modal) {
+      const botonCerrar = modal.querySelector(".modal-cerrar");
+
+      botonCerrar.addEventListener("click", function () {
+        modal.classList.remove("activo");
+        document.body.classList.remove("modal-abierto");
+      });
+
+      modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+          modal.classList.remove("activo");
+          document.body.classList.remove("modal-abierto");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
