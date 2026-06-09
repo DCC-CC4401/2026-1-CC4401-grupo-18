@@ -29,3 +29,14 @@ class PublicacionForm(forms.ModelForm):
             }),
             "categorias": forms.CheckboxSelectMultiple()
         }
+    def clean_titulo(self):
+        titulo = self.cleaned_data["titulo"].strip()
+        if len(titulo)< 3:
+            raise forms.ValidationError("El título debe tener al menos 3 caracteres.")
+        return titulo
+    
+    def clean_categorias(self):
+        categorias = self.cleaned_data.get("categorias")
+        if not categorias:
+            raise forms.ValidationError("Debe seleccionar al menos una categoría.")
+        return categorias

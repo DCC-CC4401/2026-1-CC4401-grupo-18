@@ -15,6 +15,8 @@ Ante cualquier cambio a estos modelos, recordar ejecutar:
 
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinLengthValidator
+
 
 
 class Categoria(models.Model):
@@ -52,8 +54,8 @@ class Publicacion(models.Model):
          se quiere escalar el proyecto.
 
     """
-    # Título visible del productoo servicio, debe ser único en toda la plataforma
-    titulo = models.CharField(max_length=128, blank=False, unique=True)
+    # Título visible del producto o servicio
+    titulo = models.CharField(max_length=128, blank=False, validators= [MinLengthValidator(3)])
 
     # Descripción completa del producto o servicio: características generales, estado, forma de entrega, etc
     descripcion = models.TextField(blank=False)
