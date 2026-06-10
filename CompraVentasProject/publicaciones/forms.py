@@ -3,6 +3,13 @@ from .models import Publicacion
 
 
 class PublicacionForm(forms.ModelForm):
+    
+    nueva_categoria = forms.CharField(required=False, label="Nueva categoría")
+    def clean_nueva_categoria(self):
+        categoria = self.cleaned_data["nueva_categoria"].strip()
+        return categoria  
+
+
     class Meta:
         model = Publicacion
         fields = ["titulo", "descripcion", "imagen", "categorias"]
@@ -35,8 +42,11 @@ class PublicacionForm(forms.ModelForm):
             raise forms.ValidationError("El título debe tener al menos 3 caracteres.")
         return titulo
     
-    def clean_categorias(self):
-        categorias = self.cleaned_data.get("categorias")
-        if not categorias:
-            raise forms.ValidationError("Debe seleccionar al menos una categoría.")
-        return categorias
+    def clean(self):
+        cleaned_data = super().clean()
+        categorias = cleaned_data.get("categorias")
+        nueva_categoria=cleaned_data.get("nueva_categoria", "").strip()
+
+        if not categorias and not nueva_categoria:
+            raise forms.ValidationError("Debe seleccionar o crear al menos una categoría.")
+        return cleaned_data
