@@ -12,12 +12,19 @@ class PublicacionForm(forms.ModelForm):
 
     class Meta:
         model = Publicacion
-        fields = ["titulo", "descripcion", "imagen", "categorias"]
+        fields = ["titulo", "descripcion", "imagen","precio","ubicacion","disponibilidad","nombre_vendedor",
+                  "correo_electronico","telefono", "categorias"]
 
         labels = {
             "titulo": "Título",
             "descripcion": "Descripción",
             "imagen": "Imagen",
+            "precio": "Precio",
+            "ubicacion": "Ubicación",
+            "disponibilidad": "Disponibilidad",
+            "nombre_vendedor": "Nombre del vendedor",
+            "correo_electronico": "Correo electrónico",
+            "telefono": "Teléfono",
             "categorias": "Categorías",
         }
 
@@ -34,6 +41,34 @@ class PublicacionForm(forms.ModelForm):
             "imagen": forms.ClearableFileInput(attrs={
                 "class": "form-control"
             }),
+            "precio": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ej: 5000"
+            }),
+
+            "ubicacion": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ej: Beauchef 850"
+            }),
+
+            "disponibilidad": forms.Select(attrs={
+                "class": "form-control"
+            }),
+
+            "nombre_vendedor": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Nombre completo"
+            }),
+
+            "correo_electronico": forms.EmailInput(attrs={
+                "class": "form-control",
+                "placeholder": "correo@ejemplo.com"
+            }),
+
+            "telefono": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "+56 9 1234 5678"
+            }),          
             "categorias": forms.CheckboxSelectMultiple()
         }
     def clean_titulo(self):

@@ -54,6 +54,12 @@ class Publicacion(models.Model):
          se quiere escalar el proyecto.
 
     """
+    
+    ESTADOS_DISPONIBILIDAD = [
+        ("DISPONIBLE", "Disponible"),
+        ("RESERVADO", "Reservado"),
+        ("NO_DISPONIBLE", "No disponible"),
+    ]
     # Título visible del producto o servicio
     titulo = models.CharField(max_length=128, blank=False, validators= [MinLengthValidator(3)])
 
@@ -65,6 +71,24 @@ class Publicacion(models.Model):
         upload_to="publicaciones/imagenes/", blank=False, max_length=100
     )
 
+    #Muestra precio del producto 
+    precio = models.PositiveIntegerField()
+
+    # Muestra ubicación del producto/servicio ofrecido
+    ubicacion = models.CharField(max_length=128)
+
+    #Disponibilidad del producto o servicio
+    disponibilidad = models.CharField(max_length=20, choices=ESTADOS_DISPONIBILIDAD, default="DISPONIBLE")
+   
+   #Muestra el nombre del vendedor del producto/servicio
+    nombre_vendedor = models.CharField(max_length=128)
+    
+    #Correo de contacto del vendedor
+    correo_electronico = models.EmailField()
+
+    #Teléfono de contacto del vendedor
+    telefono = models.CharField(max_length=12)
+
     # Se asigna la fecha del momento en el que se crea la publicación
     fecha_creacion = models.DateField(default=timezone.now)
 
@@ -73,7 +97,7 @@ class Publicacion(models.Model):
     # blank=True permite que una publicación no tenga categorías asignadas, y que una categoría exista
     # sin publicaciones asociadas.
     categorias = models.ManyToManyField(
-        Categoria, related_name="publicaciones", blank=True,
+        Categoria, related_name="publicaciones",
     )
 
 
