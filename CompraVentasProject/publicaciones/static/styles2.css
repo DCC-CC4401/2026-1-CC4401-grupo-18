@@ -284,7 +284,7 @@
 }
 .card-img-top {
   height: 140px;
-  object-fit: cover;
+  object-fit: contain; /* con contain para mostrar toda la img */
 }
 .card-body { padding: 10px 12px 6px !important; }
 .card-title {
