@@ -58,6 +58,15 @@
         {% for error in form_publicacion.titulo.errors %}
           <div class="error-campo">{{ error }}</div>
         {% endfor %}
+        <!-- preview -->
+         <div id="preview-container" style="display:none;">
+          <p class="preview-aviso"> Así se verá tu imagen en la tarjeta: </p>
+          <div class="preview-cuadrado">
+            <img id="preview-img" src="" alt="Preview">
+          </div>
+          <p class="preview-aviso-secundario">En "Ver más" se mostrará la imagen completa.</p>
+         </div>
+
       </div>
 
       <div class="form-field">
@@ -141,6 +150,10 @@
     const botonAbrir = document.getElementById("abrir-confirmacion");
     const botonCancelar = document.getElementById("cancelar-confirmacion");
     const botonConfirmar = document.getElementById("confirmar-publicacion");
+    //para preview
+    const inputImagen = document.getElementById("{{ form_publicacion.imagen.id_for_label }}");//id img
+    const previewContainer = document.getElementById("preview-container");//contenedor del preview
+    const previewImg = document.getElementById("preview-img");//donde se muestra la img
 
     botonAbrir.addEventListener("click", function () {
       if (formulario.checkValidity()) {
@@ -160,6 +173,19 @@
       } else {
         formulario.submit();
       }
+    });
+
+    //tambien para preview
+    inputImagen.addEventListener("change", function () {//change es cuando se selecciona archivo
+      const file = this.files[0];//primer archivo
+      if (!file) { //si el usuario cancela, se muestra none
+        previewContainer.style.display = "none";
+        return;
+      }
+      //se crea url para no subirlo
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+      previewContainer.style.display = "block";
     });
   </script>
 
