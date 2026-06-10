@@ -102,7 +102,17 @@
           <div class="error-campo">{{ error }}</div>
         {% endfor %}
       </div>
+      <div class="form-field">
+        <label for="{{form_publicacion.nueva_categoria.id_for_label}}">
+          Nueva categoría
+        </label>
+        {{ form_publicacion.nueva_categoria }}
 
+        {%for error in form_publicacion.nueva_categoria.errors %}
+          <div class="error-campo">{{ error }} </div>
+        {%endfor%}
+      </div>
+      
       <div class="form-actions">
         <a href="{% url 'publicaciones' %}#publicaciones" class="btn-secundario">
           Regresar
