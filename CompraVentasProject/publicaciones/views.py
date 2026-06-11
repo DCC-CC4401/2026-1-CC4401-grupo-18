@@ -153,7 +153,13 @@ def publicar(request):
 
         if form_publicacion.is_valid():
             # Guardar la publicación en la base de datos y redirigir al listado
-            form_publicacion.save()
+            publicacion = form_publicacion.save(commit = False)
+            publicacion.save()
+            form_publicacion.save_m2m()
+            nueva_categoria = (form_publicacion.cleaned_data["nueva_categoria"].strip().title())
+            if nueva_categoria:
+                categoria, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
+                publicacion.categorias.add(categoria)
             return redirect("/publicaciones/#publicaciones")
 
         # Si el formulario tiene errores, volver a renderizarlo con los mensajes de error
