@@ -99,6 +99,11 @@ class Publicacion(models.Model):
     categorias = models.ManyToManyField(
         Categoria, related_name="publicaciones", blank=True,
     )
+    # TODO: Ojo con el blank True. Si bien gracias al formulario la base de
+    # datos una publicación nunca va a tener una categoría, si se pueden
+    # crear por admin una publicación sin categoría. Lo que se podría hacer
+    # es que el formulario trate este caso dentro de su programación.
+    # -> CompraVentasProject/publicaciones/forms.PublicacionForm.clean
 
 
     def __str__(self) -> str:
