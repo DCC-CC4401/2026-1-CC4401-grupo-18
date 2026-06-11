@@ -97,7 +97,7 @@ class Publicacion(models.Model):
     # blank=True permite que una publicación no tenga categorías asignadas, y que una categoría exista
     # sin publicaciones asociadas.
     categorias = models.ManyToManyField(
-        Categoria, related_name="publicaciones",
+        Categoria, related_name="publicaciones", blank=True,
     )
 
 
