@@ -179,10 +179,43 @@
             </div>
 
             <div class="modal-publicacion-derecha">
-              <div class="modal-detalle">
+              <div class="modal-detalle modal-detalle-descripcion">
                 <span class="modal-detalle-label">Descripción</span>
                 <p class="modal-detalle-texto">{{ p.descripcion }}</p>
               </div>
+
+              <div class="modal-detalle-grid">
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Precio</span>
+                  <p class="modal-detalle-texto">{{ p.precio }}</p>
+                </div>
+
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Ubicación</span>
+                  <p class="modal-detalle-texto">{{ p.ubicacion }}</p>
+                </div>
+
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Disponibilidad</span>
+                  <p class="modal-detalle-texto">{{ p.disponibilidad }}</p>
+                </div>
+
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Vendedor</span>
+                  <p class="modal-detalle-texto">{{ p.nombre_vendedor }}</p>
+                </div>
+
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Correo</span>
+                  <p class="modal-detalle-texto">{{ p.correo_electronico }}</p>
+                </div>
+
+                <div class="modal-detalle">
+                  <span class="modal-detalle-label">Teléfono</span>
+                  <p class="modal-detalle-texto">{{ p.telefono }}</p>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
