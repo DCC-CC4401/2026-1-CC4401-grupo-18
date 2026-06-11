@@ -32,7 +32,7 @@ class Categoria(models.Model):
 
     def __str__(self) -> str:
         """Retorna el nombre de la categoría convirtiendo un objeto a texto comprensible para el usuario."""
-        return self.nombre
+        return str(self.nombre)
 
 
 class Publicacion(models.Model):
@@ -108,4 +108,4 @@ class Publicacion(models.Model):
 
     def __str__(self) -> str:
         """ Retorna el título de la publicación convirtiendo el objeto a texto comprensible para el usuario."""
-        return self.titulo
+        return str(self.titulo)
