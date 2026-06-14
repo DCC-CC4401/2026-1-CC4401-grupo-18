@@ -24,6 +24,12 @@
 
       <div class="nav-icons">
         <a href="{% url 'publicaciones' %}#publicaciones" title="Volver">←</a>
+        {% if user.is_authenticated %}
+          <div class="nav-user-area">
+            <span class="nav-user-name">{{ user.first_name }}</span>
+            <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
+          </div>
+        {% endif %}
       </div>
     </nav>
 

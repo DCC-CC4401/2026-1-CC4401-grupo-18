@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión — FCFM Market</title>
+
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="publicar-body">
+
+  <section class="publicar-hero auth-hero">
+    <nav class="top-nav">
+      <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
+        <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
+      </ul>
+
+      <div class="nav-icons">
+        <a href="{% url 'registro' %}" class="btn-auth-nav">Registrarse</a>
+      </div>
+    </nav>
+
+    <div class="publicar-hero-content">
+      <div class="hero-tag">✦ Bienvenido de vuelta</div>
+      <h1>Iniciar sesión</h1>
+      <p>Accede a tu cuenta para publicar en FCFM Market.</p>
+    </div>
+  </section>
+
+  <main class="publicar-section">
+    <form id="form-login" class="form-card auth-form-card" method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="form-header">
+        <h2>Iniciar sesión</h2>
+        <p>Ingresa con tu correo y contraseña</p>
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="alerta-error">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="form-field">
+        <label for="id_username">
+          Correo electrónico
+        </label>
+        <input type="email" name="username" id="id_username"
+               class="form-control" placeholder="correo@ejemplo.com"
+               value="{{ form.username.value|default:'' }}" required autofocus>
+        {% for error in form.username.errors %}
+          <div class="error-campo">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-field">
+        <label for="id_password">
+          Contraseña
+        </label>
+        <input type="password" name="password" id="id_password"
+               class="form-control" placeholder="Tu contraseña" required>
+        {% for error in form.password.errors %}
+          <div class="error-campo">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-actions">
+        <a href="{% url 'publicaciones' %}" class="btn-secundario">
+          Regresar
+        </a>
+
+        <button type="submit" class="btn-principal">
+          Iniciar sesión
+        </button>
+      </div>
+
+      <div class="auth-alt-link">
+        ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>
+      </div>
+    </form>
+  </main>
+
+</body>
+</html>

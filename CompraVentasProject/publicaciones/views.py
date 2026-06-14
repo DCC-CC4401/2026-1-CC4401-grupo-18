@@ -3,18 +3,24 @@
 Contiene las vistas que manejan las páginas principales de la plataforma:
 - `publicaciones`: página principal con listado de publicaciones y filtro por categoría.
 - `buscar`: página de búsqueda de productos o servicios.
-- `publicar`: formulario para crear una nueva publicación.
+- `publicar`: formulario para crear una nueva publicación (requiere autenticación).
+- `registro`: formulario de registro de nuevos usuarios.
+- `iniciar_sesion`: formulario de inicio de sesión.
+- `cerrar_sesion`: cierre de sesión del usuario autenticado.
 
 Cada vista solo responde a los métodos HTTP que tiene definidos, tales como:
-- GET: `publicaciones`, `buscar`, `publicar`
-- POST:`publicar`
+- GET: `publicaciones`, `buscar`, `publicar`, `registro`, `iniciar_sesion`
+- POST: `publicar`, `registro`, `iniciar_sesion`, `cerrar_sesion`
 
 Si llega cualquier otro método, la vista lo ignora y retorna None.
 """
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from publicaciones.forms import PublicacionForm
+from publicaciones.forms import LoginForm, PublicacionForm, RegistroForm
 from publicaciones.models import Categoria, Publicacion
 
 
@@ -127,6 +133,9 @@ def buscar(request):
 def publicar(request):
     """Permite crear una nueva publicación en la plataforma.
 
+    Requiere que el usuario esté autenticado. Si no lo está, redirige
+    a la página de inicio de sesión.
+
     - En GET: muestra el formulario vacío para ingresar los datos del producto.
     - En POST: valida y guarda la nueva publicación. Si el formulario es válido,
       redirige a la página principal. Si no, vuelve a mostrar el formulario con 
@@ -147,6 +156,9 @@ def publicar(request):
         Retorna None si el método HTTP no es GET ni POST.
 
     """
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     if request.method == "POST":
         # Inicializar el formulario con los datos enviados, incluyendo archivos (imagen)
         form_publicacion = PublicacionForm(request.POST, request.FILES)
@@ -178,3 +190,105 @@ def publicar(request):
             {"form_publicacion": form_publicacion},
         )
     return None
+
+
+def registro(request):
+    """Muestra y procesa el formulario de registro de nuevos usuarios.
+
+    - En GET: muestra el formulario de registro vacío.
+    - En POST: valida los datos ingresados. Si son válidos, crea el usuario,
+      inicia sesión automáticamente y redirige a la página principal.
+      Si no son válidos, vuelve a mostrar el formulario con los errores.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        GET: HttpResponse con el template 'publicaciones/registro.html'.
+        POST válido: Redirige a la vista 'publicaciones'.
+        POST inválido: HttpResponse con el formulario y errores de validación.
+    """
+    if request.user.is_authenticated:
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "¡Cuenta creada exitosamente! Bienvenido/a.")
+            return redirect("publicaciones")
+        return render(
+            request,
+            "publicaciones/registro.html",
+            {"form": form},
+        )
+
+    if request.method == "GET":
+        form = RegistroForm()
+        return render(
+            request,
+            "publicaciones/registro.html",
+            {"form": form},
+        )
+    return None
+
+
+def iniciar_sesion(request):
+    """Muestra y procesa el formulario de inicio de sesión.
+
+    - En GET: muestra el formulario de login vacío.
+    - En POST: valida las credenciales. Si son correctas, inicia sesión
+      y redirige a la página principal. Si no, muestra un error.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        GET: HttpResponse con el template 'publicaciones/login.html'.
+        POST válido: Redirige a la vista 'publicaciones'.
+        POST inválido: HttpResponse con el formulario y errores.
+    """
+    if request.user.is_authenticated:
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            # Django usa username para autenticar; en nuestro caso username = email
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("publicaciones")
+            else:
+                form.add_error(None, "Correo o contraseña incorrectos.")
+        return render(
+            request,
+            "publicaciones/login.html",
+            {"form": form},
+        )
+
+    if request.method == "GET":
+        form = LoginForm()
+        return render(
+            request,
+            "publicaciones/login.html",
+            {"form": form},
+        )
+    return None
+
+
+def cerrar_sesion(request):
+    """Cierra la sesión del usuario autenticado y redirige a la página principal.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        Redirige a la vista 'publicaciones'.
+    """
+    logout(request)
+    return redirect("publicaciones")
+

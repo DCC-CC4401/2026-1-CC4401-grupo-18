@@ -1131,3 +1131,169 @@ button {
     bottom: 22px;
   }
 }
+
+/* -------- AUTENTICACIÓN: NAVBAR -------- */
+
+.btn-auth-nav {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 7px 18px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+  transition: all 0.22s;
+  white-space: nowrap;
+}
+
+.btn-auth-nav:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-registro-nav {
+  background: #78c2ad;
+  color: #fff;
+  border-color: #78c2ad;
+}
+
+.btn-registro-nav:hover {
+  background: #56cc9d;
+  color: #fff;
+  border-color: #56cc9d;
+}
+
+.btn-logout-nav {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+  font-size: 0.72rem;
+  padding: 5px 14px;
+}
+
+.btn-logout-nav:hover {
+  background: rgba(232, 76, 97, 0.8);
+  border-color: rgba(232, 76, 97, 0.9);
+  color: #fff;
+}
+
+.nav-user-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-user-name {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* -------- AUTENTICACIÓN: FORMULARIOS -------- */
+
+.auth-hero {
+  height: 36vh;
+  min-height: 280px;
+}
+
+.auth-form-card {
+  max-width: 520px;
+}
+
+.form-row-double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.auth-alt-link {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1.5px solid #f0f0f0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.auth-alt-link a {
+  color: #78c2ad;
+  font-weight: 800;
+  transition: color 0.2s;
+}
+
+.auth-alt-link a:hover {
+  color: #56cc9d;
+}
+
+.alerta-exito {
+  background: #e4f3ef;
+  color: #2d7a5f;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.alerta-toast {
+  margin: 0;
+  padding: 14px 48px;
+  border-radius: 0;
+  text-align: center;
+  animation: toastFadeOut 5s ease forwards;
+}
+
+@keyframes toastFadeOut {
+  0%, 70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+}
+
+/* -------- RESPONSIVE AUTENTICACIÓN -------- */
+
+@media (max-width: 768px) {
+  .nav-icons {
+    gap: 8px;
+  }
+
+  .btn-auth-nav {
+    font-size: 0.7rem;
+    padding: 5px 12px;
+  }
+
+  .nav-user-name {
+    display: none;
+  }
+
+  .form-row-double {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .auth-form-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-hero {
+    min-height: 240px;
+  }
+}

@@ -22,11 +22,22 @@
       <ul class="nav-links">
         <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
         <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
-        <li><a href="{% url 'publicar' %}">Publicar</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'publicar' %}">Publicar</a></li>
+        {% endif %}
       </ul>
 
       <div class="nav-icons">
-        <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+          <div class="nav-user-area">
+            <span class="nav-user-name">{{ user.first_name }}</span>
+            <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn-auth-nav">Iniciar sesión</a>
+          <a href="{% url 'registro' %}" class="btn-auth-nav btn-registro-nav">Registrarse</a>
+        {% endif %}
       </div>
     </nav>
 
@@ -67,13 +78,23 @@
 
   <main id="publicaciones" class="market-section">
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alerta-exito alerta-toast" id="alerta-mensaje">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <div class="section-header">
       <div class="section-title-block">
         <div class="big">Publicaciones</div>
         <div class="sub">lo que ofrece la comunidad</div>
       </div>
 
-      <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
+      {% endif %}
     </div>
 
     {% if q or c_activa %}
@@ -225,7 +246,9 @@
     {% endfor %}
   {% endif %}
 
-  <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
+  {% if user.is_authenticated %}
+    <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
+  {% endif %}
 
   <script>
     const botonesAbrirModal = document.querySelectorAll(".btn-abrir-modal");
