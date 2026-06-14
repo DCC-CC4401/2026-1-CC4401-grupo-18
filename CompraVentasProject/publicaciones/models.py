@@ -1,11 +1,11 @@
 """Modelo de la aplicación de publicaciones.
 
-Define los modelos `Categoria` y `Publicacion` utilizados para representar 
+Define los modelos ``Categoria`` y ``Publicacion`` utilizados para representar 
 los datos de la plataforma de compra y venta de la FCFM.
 
 La relación entre ambos modelos es Many-to-many:
 - Una publicación puede pertenecer a muchas categorías.
-- Una categoría puede agrupar muchas publicaciones o no tener alguna publicación.
+- Una categoría puede agrupar muchas publicaciones, o ninguna.
 
 Ante cualquier cambio a estos modelos, recordar ejecutar:
     $ python manage.py makemigrations
@@ -22,37 +22,53 @@ from django.core.validators import MinLengthValidator
 class Categoria(models.Model):
     """ Representa una categoría temática para clasificar las publicaciones.
     
-    Ejemplos de categorías: Comida, Clases particulares, Ropa, Mueebles, Arriendos, etc.
+    Ejemplos de categorías: Comida, Clases particulares, Ropa, Muebles, Arriendos, etc.
 
     Attributes:
-        nombre: Nombre descriptivo de la categoría (máximo 64 caracteres).
+        nombre (str): Nombre descriptivo de la categoría (máximo 64 caracteres).
     
     """
+
+    # Nombre de la categoría, visible para el usuario en filtros y formularios.
     nombre = models.CharField(max_length=64)
 
     def __str__(self) -> str:
-        """Retorna el nombre de la categoría convirtiendo un objeto a texto comprensible para el usuario."""
+        """Retorna el nombre de la categoría como representación legible del objeto."""
         return str(self.nombre)
 
 
 class Publicacion(models.Model):
-    """ Representa un producto publicado en la págin web.
+    """ Representa un producto o servicio publicado en la página web.
 
     Cada publicación corresponde a un producto o servicio que un integrante de la facultad desea vender. 
-    Incluye título, imagen, descripción, fecha de creación (se genera automáticamente) y puede estar asociada 
-    a una o más categorías.
+    Incluye información del producto o servicio (titulo, imagen, descripcion, precio, disponibilidad) 
+    y datos de contacto del vendedor (nombre_vendedor, ubicacion, correo_electronico y telefono).
+    La fecha de creación de la publicación se asigna automáticamente al momento de guardar.
 
     Attributes:
-        titulo: Título único que identifica el producto o servicio (máximo 128 caracteres).
-        descripcion: Descripción detallada de las características del producto o servicio, precio, forma de entrega, etc.
-        imagen: foto del producto o servicio, almacenada en 'publicaciones/imagenes/'.
-        fecha_creacion: fecha en que se creó la publicación (se asigna automáticamente).
-        categorias: Categorías asociadas al producto o servicio.
+        titulo (str): Título único que identifica el producto o servicio (entre 3 y 128 caracteres).
+        descripcion (str): Descripción detallada del producto o servicio: características, forma de entrega, 
+            estado, etc.
+        imagen (ImageField): foto del producto o servicio, almacenada en ``MEDIA_ROOT/publicaciones/imagenes/``.
+        precio (int): Precio del producto o servicio en pesos chilenos (entero positivo).
+        ubicacion (str): Lugar en donde se encuentra el producto o se presta el servicio.
+        disponibilidad (str): Estado actual del producto. Dentro de los valores definidos en ``ESTADOS_DISPONIBILIDAD``
+            se encuentra: ``NO_DISPONIBLE``, ``RESERVADO`` y por defecto ``DISPONIBLE``.
+        nombre_vendedor (str): Nombre completo del vendedor o prestador del servicio.
+        correo_electronico (str): Correo electrónico de contacto del vendedor.
+        telefono (str): Número de teléfono de contacto del vendedor (máximo 12 caracteres, ej: ``+56912345678``).
+        fecha_creacion (date): Fecha en que se creó la publicación (se asigna automáticamente).
+        categorias (ManyToManyField): Categorías asociadas al producto o servicio. Una publicación puede no tener
+            categorías asignadas (``blank=True``).
 
     Note:
-         TODO(Hector Bonilla): Considerar tambien un modelo intermedio PublicacionCategoria si
+         TODO(Hector Bonilla): Considerar tambien un modelo intermedio ``PublicacionCategoria`` si
          se quiere escalar el proyecto.
 
+         El campo ``categorias`` tiene ``blank=True``, lo que permite crear publicaciones sin categoría
+         desde el panel de administración. La validación que exige al menos una categoría debe aplicarse 
+         en el formulario. 
+         Ver: ``publicaciones/forms.PublicacionForm.clean``.
     """
     
     ESTADOS_DISPONIBILIDAD = [
@@ -60,52 +76,50 @@ class Publicacion(models.Model):
         ("RESERVADO", "Reservado"),
         ("NO_DISPONIBLE", "No disponible"),
     ]
-    # Título visible del producto o servicio
+
+    # Título visible del producto o servicio. Mínimo 3 caracteres, máximo 128.
     titulo = models.CharField(max_length=128, blank=False, validators= [MinLengthValidator(3)])
 
-    # Descripción completa del producto o servicio: características generales, estado, forma de entrega, etc
+    # Descripción completa del producto o servicio: características generales, estado, forma de entrega, etc.
     descripcion = models.TextField(blank=False)
     
-    # La imagen se guarda en MEDIA_ROOT/publicaciones/imagenes/
+    # Imagen que corresponde a la foto del producto o servicio. Se guarda en MEDIA_ROOT/publicaciones/imagenes/
     imagen = models.ImageField(
         upload_to="publicaciones/imagenes/", blank=False, max_length=100
     )
 
-    #Muestra precio del producto 
+    # Precio del producto o servicio en pesos (entero positivo, sin decimales ni separador de miles).
     precio = models.PositiveIntegerField()
 
-    # Muestra ubicación del producto/servicio ofrecido
+    # Lugar en donde se encuentra el producto o donde se presta el servicio ofrecido (máximo 128 caracteres).
     ubicacion = models.CharField(max_length=128)
 
-    #Disponibilidad del producto o servicio
+    # Estado actual del producto o servicio: DISPONIBLE, RESERVADO o NO_DISPONIBLE.
     disponibilidad = models.CharField(max_length=20, choices=ESTADOS_DISPONIBILIDAD, default="DISPONIBLE")
    
-   #Muestra el nombre del vendedor del producto/servicio
+    # Nombre completo del vendedor del producto/servicio (máximo 128 caracteres).
     nombre_vendedor = models.CharField(max_length=128)
     
-    #Correo de contacto del vendedor
+    # Correo electrónico de contacto del vendedor.
     correo_electronico = models.EmailField()
 
-    #Teléfono de contacto del vendedor
+    # Teléfono de contacto del vendedor (máximo 12 caracteres, ej: +56912345678).
     telefono = models.CharField(max_length=12)
 
-    # Se asigna la fecha del momento en el que se crea la publicación
+    # Fecha de creación de la publicación. Se asigna automáticamente al confirmar la publicación.
     fecha_creacion = models.DateField(default=timezone.now)
 
-    # Relacion Many-to-Many: Una publicación puede tener varias categorías y una categoría puede tener
-    # varias publicaciones o ninguna publicación.
-    # blank=True permite que una publicación no tenga categorías asignadas, y que una categoría exista
-    # sin publicaciones asociadas.
+    # Relacion Many-to-Many con Categoria. Ver docstring de la clase Publicacion para explorar detalles sobre blank=True.
     categorias = models.ManyToManyField(
         Categoria, related_name="publicaciones", blank=True,
     )
-    # TODO: Ojo con el blank True. Si bien gracias al formulario la base de
+    # TODO(Hector Bonilla): Ojo con el blank True. Si bien gracias al formulario la base de
     # datos una publicación nunca va a tener una categoría, si se pueden
     # crear por admin una publicación sin categoría. Lo que se podría hacer
     # es que el formulario trate este caso dentro de su programación.
-    # -> CompraVentasProject/publicaciones/forms.PublicacionForm.clean
+    # -> CompraVentasProject/publicaciones/forms.PublicacionForm.clean()
 
 
     def __str__(self) -> str:
-        """ Retorna el título de la publicación convirtiendo el objeto a texto comprensible para el usuario."""
+        """Retorna el título de la publicación como representación legible del objeto."""
         return str(self.titulo)
