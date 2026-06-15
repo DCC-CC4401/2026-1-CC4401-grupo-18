@@ -1477,3 +1477,144 @@ button {
     min-height: 240px;
   }
 }
+
+
+/* -------- AVATAR DEL VENDEDOR -------- */
+.card-autor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.card-autor span {
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 600;
+}
+
+.autor-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #78c2ad;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+
+.autor-avatar--grande {
+  width: 44px;
+  height: 44px;
+  font-size: 1rem;
+}
+
+.modal-vendedor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+
+/* -------- PERFIL -------- */
+.perfil-layout {
+  display: flex;
+  gap: 40px;
+  padding: 40px 48px 72px;
+  align-items: flex-start;
+}
+
+.perfil-card {
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  position: sticky;
+  top: 24px;
+}
+
+.perfil-avatar-grande {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #78c2ad;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  letter-spacing: -1px;
+}
+
+.perfil-nombre {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.perfil-email {
+  font-size: 0.8rem;
+  color: #999;
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+
+.perfil-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.perfil-stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #78c2ad;
+}
+
+.perfil-stat-label {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 600;
+}
+
+.perfil-publicaciones {
+  flex: 1;
+  min-width: 0;
+}
+
+.perfil-seccion-titulo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .perfil-layout {
+    flex-direction: column;
+    padding: 24px 16px 48px;
+  }
+  .perfil-card {
+    width: 100%;
+    position: static;
+  }
+}

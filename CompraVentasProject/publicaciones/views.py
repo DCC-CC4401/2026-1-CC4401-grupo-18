@@ -173,6 +173,10 @@ def publicar(request):
             # Guardar la publicación sin confirmar aún para poder adicionar relaciones Many-to-many (m2m)
             publicacion = form_publicacion.save(commit = False)
             publicacion.usuario = request.user
+            #AJUSTE, AÑADIR CAMPOS DEL USUARIO
+            publicacion.nombre_vendedor = f"{request.user.first_name} {request.user.last_name}".strip()
+            publicacion.correo_electronico = request.user.email
+
             publicacion.save()
             form_publicacion.save_m2m()
 
@@ -229,6 +233,10 @@ def editar_publicacion(request, pk):
 
         if form_publicacion.is_valid():
             pub_guardada = form_publicacion.save(commit=False)
+            #MISMO CAMBIO DE BORRAR DEL FORM Y AÑADIR SEGUN USUARIO
+            pub_guardada.nombre_vendedor = f"{publicacion.usuario.first_name} {publicacion.usuario.last_name}".strip()
+            pub_guardada.correo_electronico = publicacion.usuario.email
+
             pub_guardada.save()
             form_publicacion.save_m2m()
             
@@ -347,4 +355,36 @@ def cerrar_sesion(request):
     """
     logout(request)
     return redirect("publicaciones")
+
+#nuevo, es para tener el perfil propio
+def mi_perfil(request):
+    """Perfil propio: muestra datos del usuario y sus publicaciones.
+    Permite editar nombre, apellido y teléfono de contacto.
+    """
+    publicaciones_usuario = Publicacion.objects.filter(
+        usuario=request.user
+    ).order_by("-fecha_creacion")
+
+    return render(request, "publicaciones/perfil.html", {
+        "perfil_usuario": request.user,
+        "publicaciones_usuario": publicaciones_usuario,
+        "es_propio": True,
+    })
+
+
+def perfil(request, user_id):
+    """Perfil público de otro usuario: muestra sus datos y publicaciones activas."""
+    from django.contrib.auth.models import User
+    from django.shortcuts import get_object_or_404
+
+    perfil_usuario = get_object_or_404(User, id=user_id)
+    publicaciones_usuario = Publicacion.objects.filter(
+        usuario=perfil_usuario
+    ).order_by("-fecha_creacion")
+
+    return render(request, "publicaciones/perfil.html", {
+        "perfil_usuario": perfil_usuario,
+        "publicaciones_usuario": publicaciones_usuario,
+        "es_propio": request.user == perfil_usuario,
+    })
 

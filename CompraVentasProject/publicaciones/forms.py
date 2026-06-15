@@ -127,8 +127,7 @@ class PublicacionForm(forms.ModelForm):
 
     class Meta:
         model = Publicacion
-        fields = ["titulo", "descripcion", "imagen","precio","ubicacion","disponibilidad","nombre_vendedor",
-                  "correo_electronico","telefono", "categorias"]
+        fields = ["titulo", "descripcion", "imagen","precio","ubicacion","disponibilidad","telefono", "categorias"]
 
         labels = {
             "titulo": "Título",
@@ -137,8 +136,6 @@ class PublicacionForm(forms.ModelForm):
             "precio": "Precio",
             "ubicacion": "Ubicación",
             "disponibilidad": "Disponibilidad",
-            "nombre_vendedor": "Nombre del vendedor",
-            "correo_electronico": "Correo electrónico",
             "telefono": "Teléfono",
             "categorias": "Categorías",
         }
@@ -165,16 +162,6 @@ class PublicacionForm(forms.ModelForm):
 
             "disponibilidad": forms.Select(attrs={
                 "class": "form-control"
-            }),
-
-            "nombre_vendedor": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Nombre completo"
-            }),
-
-            "correo_electronico": forms.EmailInput(attrs={
-                "class": "form-control",
-                "placeholder": "correo@ejemplo.com"
             }),
 
             "telefono": forms.TextInput(attrs={

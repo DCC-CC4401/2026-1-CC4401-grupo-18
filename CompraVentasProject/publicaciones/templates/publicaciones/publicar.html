@@ -131,28 +131,6 @@
       </div>
 
       <div class="form-field">
-        <label for="{{ form_publicacion.nombre_vendedor.id_for_label }}">
-          Nombre del vendedor<span class="asterisco-obligatorio">*</span>
-        </label>
-        {{ form_publicacion.nombre_vendedor }}
-
-        {% for error in form_publicacion.nombre_vendedor.errors %}
-          <div class="error-campo">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-field">
-        <label for="{{ form_publicacion.correo_electronico.id_for_label }}">
-          Correo electrónico<span class="asterisco-obligatorio">*</span>
-        </label>
-        {{ form_publicacion.correo_electronico }}
-
-        {% for error in form_publicacion.correo_electronico.errors %}
-          <div class="error-campo">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-field">
         <label for="{{ form_publicacion.telefono.id_for_label }}">
           Teléfono<span class="asterisco-obligatorio">*</span>
         </label>

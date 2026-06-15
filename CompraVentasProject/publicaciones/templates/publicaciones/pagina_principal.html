@@ -18,6 +18,7 @@
 
     <nav class="top-nav">
       <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
+      
 
       <ul class="nav-links">
         <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
@@ -31,7 +32,8 @@
         {% if user.is_authenticated %}
           <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
           <div class="nav-user-area">
-            <span class="nav-user-name">{{ user.first_name }}</span>
+            <!--aca el cambio-->
+            <a href="{% url 'mi_perfil' %}" class="nav-user-name">{{ user.first_name }}</a>
             <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
           </div>
         {% else %}
@@ -154,6 +156,16 @@
                       <span class="category-badge">{{ c.nombre }}</span>
                     {% endfor %}
                   </div>
+
+                  {% if p.usuario %}
+                  <a href="{% url 'perfil' p.usuario.id %}" class="card-autor">
+                    <div class="autor-avatar">
+                      {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
+                    </div>
+                    <span>{{ p.usuario.first_name }} {{ p.usuario.last_name }}</span>
+                  </a>
+                  {% endif %}
+
                 </div>
 
                 <div class="card-footer">
@@ -214,6 +226,21 @@
             </div>
 
             <div class="modal-publicacion-derecha">
+              <!-- NUEVO -->
+               <div class="modal-detalle">
+                <span class="modal-detalle-label">Vendedor</span>
+                <div class="modal-vendedor">
+                  <div class="autor-avatar autor-avatar--grande">
+                    {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
+                  </div>
+                  <div>
+                    <p class="modal-detalle-texto">{{ p.usuario.first_name }} {{ p.usuario.last_name }}</p>
+                    <p class="modal-detalle-texto">{{ p.usuario.email }}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- TERMINA LO NUEVO -->
+               
               <div class="modal-detalle modal-detalle-descripcion">
                 <span class="modal-detalle-label">Descripción</span>
                 <p class="modal-detalle-texto">{{ p.descripcion }}</p>

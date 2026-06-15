@@ -11,5 +11,7 @@ urlpatterns = [
     path("registro/", views.registro, name="registro"),
     path("login/", views.iniciar_sesion, name="login"),
     path("logout/", views.cerrar_sesion, name="logout"),
+    path("perfil/", views.mi_perfil, name="mi_perfil"),
+    path("perfil/<int:user_id>/", views.perfil, name="perfil"),
 ]
 
