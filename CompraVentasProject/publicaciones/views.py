@@ -172,6 +172,7 @@ def publicar(request):
         if form_publicacion.is_valid():
             # Guardar la publicación sin confirmar aún para poder adicionar relaciones Many-to-many (m2m)
             publicacion = form_publicacion.save(commit = False)
+            publicacion.usuario = request.user
             publicacion.save()
             form_publicacion.save_m2m()
 
@@ -180,7 +181,7 @@ def publicar(request):
             if nueva_categoria:
                 categoria, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
                 publicacion.categorias.add(categoria)
-
+            messages.success(request, "¡Publicación creada exitosamente!")
             return redirect("/publicaciones/#publicaciones")
 
         # Si el formulario tiene errores, volver a renderizarlo con los mensajes de error
@@ -199,6 +200,52 @@ def publicar(request):
             {"form_publicacion": form_publicacion},
         )
     return None
+
+
+@login_required
+def editar_publicacion(request, pk):
+    """Permite editar una publicación existente.
+    Solo el dueño de la publicación puede editarla.
+    Si la disponibilidad cambia a NO_DISPONIBLE, la publicación se elimina.
+    """
+    try:
+        publicacion = Publicacion.objects.get(pk=pk)
+    except Publicacion.DoesNotExist:
+        messages.error(request, "La publicación no existe.")
+        return redirect("publicaciones")
+
+    if publicacion.usuario != request.user:
+        messages.error(request, "No tienes permiso para editar esta publicación.")
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        # Si la disponibilidad en POST es NO_DISPONIBLE, eliminamos
+        if request.POST.get("disponibilidad") == "NO_DISPONIBLE":
+            publicacion.delete()
+            messages.success(request, "La publicación ha sido eliminada.")
+            return redirect("publicaciones")
+
+        form_publicacion = PublicacionForm(request.POST, request.FILES, instance=publicacion)
+
+        if form_publicacion.is_valid():
+            pub_guardada = form_publicacion.save(commit=False)
+            pub_guardada.save()
+            form_publicacion.save_m2m()
+            
+            nueva_categoria = (form_publicacion.cleaned_data["nueva_categoria"].strip().title())
+            if nueva_categoria:
+                categoria, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
+                pub_guardada.categorias.add(categoria)
+                
+            messages.success(request, "¡Publicación actualizada exitosamente!")
+            return redirect("publicaciones")
+        else:
+            messages.error(request, "Por favor corrige los errores en el formulario.")
+            # No renderizamos una plantilla separada, solo redirigimos con mensajes
+            # En una aplicación real podríamos querer devolver el modal con errores, pero como el formulario está dentro del modal en la página principal, por ahora es más fácil redirigir. El usuario tendrá que intentarlo de nuevo.
+            return redirect("publicaciones")
+
+    return redirect("publicaciones")
 
 
 def registro(request):

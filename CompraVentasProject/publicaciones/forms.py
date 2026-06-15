@@ -110,6 +110,16 @@ class LoginForm(forms.Form):
 class PublicacionForm(forms.ModelForm):
     
     nueva_categoria = forms.CharField(required=False, label="Nueva categoría")
+    imagen = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={
+        "class": "form-control"
+    }))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Se requiere la imagen solo al crear una nueva publicación, no al editar una existente
+        if not self.instance.pk or not self.instance.imagen:
+            self.fields['imagen'].required = True
+
     def clean_nueva_categoria(self):
         categoria = self.cleaned_data["nueva_categoria"].strip()
         return categoria  
@@ -142,9 +152,6 @@ class PublicacionForm(forms.ModelForm):
                 "class": "form-control",
                 "rows": 4,
                 "placeholder": "Describe el producto, precio, estado, forma de entrega, etc."
-            }),
-            "imagen": forms.ClearableFileInput(attrs={
-                "class": "form-control"
             }),
             "precio": forms.NumberInput(attrs={
                 "class": "form-control",

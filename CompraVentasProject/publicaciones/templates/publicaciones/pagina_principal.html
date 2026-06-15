@@ -158,13 +158,25 @@
 
                 <div class="card-footer">
                   <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
-                  <button
-                    type="button"
-                    class="btn-ver btn-abrir-modal"
-                    data-modal="modal-publicacion-{{ p.id }}"
-                  >
-                    Ver más
-                  </button>
+                  <div>
+                    {% if user.is_authenticated and p.usuario == user %}
+                      <button
+                        type="button"
+                        class="btn-ver btn-abrir-modal-editar"
+                        data-modal="modal-editar-{{ p.id }}"
+                        style="margin-right: 5px; background: #e4f3ef; color: #5ba893;"
+                      >
+                        Editar
+                      </button>
+                    {% endif %}
+                    <button
+                      type="button"
+                      class="btn-ver btn-abrir-modal"
+                      data-modal="modal-publicacion-{{ p.id }}"
+                    >
+                      Ver más
+                    </button>
+                  </div>
                 </div>
 
               </article>
@@ -239,7 +251,6 @@
                 </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
       </div>
@@ -247,11 +258,109 @@
   {% endif %}
 
   {% if user.is_authenticated %}
+    {% for p in publicaciones %}
+      {% if p.usuario == user %}
+        <div id="modal-editar-{{ p.id }}" class="modal-publicacion modal-editar">
+          <div class="modal-publicacion-contenido">
+            <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
+            <form method="post" action="{% url 'editar_publicacion' p.id %}" enctype="multipart/form-data" id="form-editar-{{ p.id }}">
+              {% csrf_token %}
+              <div class="modal-publicacion-grid">
+                <div class="modal-publicacion-izquierda">
+                  <div class="edit-img-container">
+                    <img src="{{ p.imagen.url }}" class="modal-publicacion-img" alt="{{ p.titulo }}" id="preview-editar-{{ p.id }}">
+                    <label for="id_imagen_{{ p.id }}" class="btn-edit-icon" title="Cambiar imagen">✏️</label>
+                    <input type="file" name="imagen" id="id_imagen_{{ p.id }}" class="hidden-input img-edit-input" accept="image/*" data-preview="preview-editar-{{ p.id }}">
+                  </div>
+
+                  <div class="edit-field-group">
+                    <input type="text" name="titulo" value="{{ p.titulo }}" class="modal-publicacion-titulo edit-input-title" required minlength="3">
+                    <span class="btn-edit-icon" title="Editar título">✏️</span>
+                  </div>
+                </div>
+
+                <div class="modal-publicacion-derecha">
+                  <div class="modal-detalle modal-detalle-descripcion edit-field-group">
+                    <span class="modal-detalle-label">Descripción <span class="btn-edit-icon">✏️</span></span>
+                    <textarea name="descripcion" class="edit-textarea" required>{{ p.descripcion }}</textarea>
+                  </div>
+
+                  <div class="modal-detalle-grid">
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Precio <span class="btn-edit-icon">✏️</span></span>
+                      <input type="number" name="precio" value="{{ p.precio }}" class="edit-input" required min="0">
+                    </div>
+
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Ubicación <span class="btn-edit-icon">✏️</span></span>
+                      <input type="text" name="ubicacion" value="{{ p.ubicacion }}" class="edit-input" required>
+                    </div>
+
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Disponibilidad <span class="btn-edit-icon">✏️</span></span>
+                      <select name="disponibilidad" class="edit-select disponibilidad-select" data-form="form-editar-{{ p.id }}" data-modal="modal-confirmacion-eliminar" required>
+                        <option value="DISPONIBLE" {% if p.disponibilidad == 'DISPONIBLE' %}selected{% endif %}>Disponible</option>
+                        <option value="RESERVADO" {% if p.disponibilidad == 'RESERVADO' %}selected{% endif %}>Reservado</option>
+                        <option value="NO_DISPONIBLE" {% if p.disponibilidad == 'NO_DISPONIBLE' %}selected{% endif %}>No disponible</option>
+                      </select>
+                    </div>
+
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Vendedor <span class="btn-edit-icon">✏️</span></span>
+                      <input type="text" name="nombre_vendedor" value="{{ p.nombre_vendedor }}" class="edit-input" required>
+                    </div>
+
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Correo <span class="btn-edit-icon">✏️</span></span>
+                      <input type="email" name="correo_electronico" value="{{ p.correo_electronico }}" class="edit-input" required>
+                    </div>
+
+                    <div class="modal-detalle edit-field-group">
+                      <span class="modal-detalle-label">Teléfono <span class="btn-edit-icon">✏️</span></span>
+                      <input type="text" name="telefono" value="{{ p.telefono }}" class="edit-input" required>
+                    </div>
+                  </div>
+                  
+                  <div class="modal-detalle edit-field-group" style="margin-top: 14px;">
+                      <span class="modal-detalle-label">Categorías <span class="btn-edit-icon">✏️</span></span>
+                      <div class="categoria-opciones edit-categorias">
+                         {% for c in categorias %}
+                            <label>
+                                <input type="checkbox" name="categorias" value="{{ c.id }}" {% if c in p.categorias.all %}checked{% endif %}>
+                                {{ c.nombre }}
+                            </label>
+                         {% endfor %}
+                      </div>
+                      <input type="text" name="nueva_categoria" placeholder="Nueva categoría (opcional)" class="edit-input" style="margin-top: 10px;">
+                  </div>
+
+                  <div class="form-actions" style="margin-top: auto; padding-top: 20px; justify-content: flex-end;">
+                    <button type="submit" class="btn-principal">Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
     <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
+    
+    <div id="modal-confirmacion-eliminar" class="modal-confirmacion">
+      <div class="caja-confirmacion">
+        <div class="modal-icon" style="color: #e84c61; background: #ffe4dc;">🗑️</div>
+        <h3>Eliminar publicación</h3>
+        <p>Al marcar esta publicación como "No disponible", será eliminada permanentemente. ¿Estás seguro?</p>
+        <div class="botones-confirmacion">
+          <button type="button" id="cancelar-eliminar" class="btn-secundario">Cancelar</button>
+          <button type="button" id="confirmar-eliminar" class="btn-principal" style="background: #e84c61;">Eliminar</button>
+        </div>
+      </div>
+    </div>
   {% endif %}
 
   <script>
-    const botonesAbrirModal = document.querySelectorAll(".btn-abrir-modal");
+    const botonesAbrirModal = document.querySelectorAll(".btn-abrir-modal, .btn-abrir-modal-editar");
     const modalesPublicacion = document.querySelectorAll(".modal-publicacion");
 
     botonesAbrirModal.forEach(function (boton) {
@@ -281,6 +390,79 @@
         }
       });
     });
+
+    const imgInputs = document.querySelectorAll('.img-edit-input');
+    imgInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                const previewId = this.getAttribute('data-preview');
+                reader.onload = function(e) {
+                    document.getElementById(previewId).src = e.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+
+    const selectsDisponibilidad = document.querySelectorAll('.disponibilidad-select');
+    const modalEliminar = document.getElementById('modal-confirmacion-eliminar');
+    const btnCancelarEliminar = document.getElementById('cancelar-eliminar');
+    const btnConfirmarEliminar = document.getElementById('confirmar-eliminar');
+    let formToSubmitOnDelete = null;
+    let selectToReset = null;
+    let previousSelectValue = null;
+
+    selectsDisponibilidad.forEach(select => {
+        select.addEventListener('focus', function() {
+            previousSelectValue = this.value;
+        });
+
+        select.addEventListener('change', function() {
+            if (this.value === 'NO_DISPONIBLE') {
+                const modalId = this.getAttribute('data-modal');
+                const formId = this.getAttribute('data-form');
+                formToSubmitOnDelete = document.getElementById(formId);
+                selectToReset = this;
+                
+                if(modalEliminar) {
+                    modalEliminar.classList.add('activo');
+                    modalEliminar.style.display = 'flex';
+                    modalEliminar.style.zIndex = '9999';
+                }
+            }
+        });
+    });
+
+    if (btnCancelarEliminar) {
+        btnCancelarEliminar.addEventListener('click', function() {
+            modalEliminar.classList.remove('activo');
+            modalEliminar.style.display = 'none';
+            
+            if (selectToReset && previousSelectValue) {
+                selectToReset.value = previousSelectValue;
+            } else if (selectToReset) {
+                selectToReset.value = 'DISPONIBLE';
+            }
+            formToSubmitOnDelete = null;
+            selectToReset = null;
+        });
+    }
+
+    if (btnConfirmarEliminar) {
+        btnConfirmarEliminar.addEventListener('click', function() {
+            if (formToSubmitOnDelete) {
+                formToSubmitOnDelete.submit();
+            }
+        });
+    }
+    
+    setTimeout(function() {
+      const toast = document.getElementById('alerta-mensaje');
+      if (toast) {
+        toast.style.display = 'none';
+      }
+    }, 5000);
   </script>
 </body>
 </html>
