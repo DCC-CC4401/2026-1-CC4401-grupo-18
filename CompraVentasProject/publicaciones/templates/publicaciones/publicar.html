@@ -24,6 +24,12 @@
 
       <div class="nav-icons">
         <a href="{% url 'publicaciones' %}#publicaciones" title="Volver">←</a>
+        {% if user.is_authenticated %}
+          <div class="nav-user-area">
+            <span class="nav-user-name">{{ user.first_name }}</span>
+            <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
+          </div>
+        {% endif %}
       </div>
     </nav>
 
@@ -120,28 +126,6 @@
         {{ form_publicacion.disponibilidad }}
 
         {% for error in form_publicacion.disponibilidad.errors %}
-          <div class="error-campo">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-field">
-        <label for="{{ form_publicacion.nombre_vendedor.id_for_label }}">
-          Nombre del vendedor<span class="asterisco-obligatorio">*</span>
-        </label>
-        {{ form_publicacion.nombre_vendedor }}
-
-        {% for error in form_publicacion.nombre_vendedor.errors %}
-          <div class="error-campo">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-field">
-        <label for="{{ form_publicacion.correo_electronico.id_for_label }}">
-          Correo electrónico<span class="asterisco-obligatorio">*</span>
-        </label>
-        {{ form_publicacion.correo_electronico }}
-
-        {% for error in form_publicacion.correo_electronico.errors %}
           <div class="error-campo">{{ error }}</div>
         {% endfor %}
       </div>

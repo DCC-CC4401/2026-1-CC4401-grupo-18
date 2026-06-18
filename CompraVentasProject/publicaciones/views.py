@@ -1,21 +1,28 @@
 """Vistas de la aplicación de publicaciones.
 
 Contiene las vistas que manejan las páginas principales de la plataforma:
-- ``publicaciones``: página principal con listado de publicaciones y filtro por categoría.
-- ``buscar``: búsqueda de productos o servicios por texto y categoría.
-- ``publicar``: formulario para crear una nueva publicación.
 
-Cada vista solo responde a los métodos HTTP que tiene definidos:
-- GET: ``publicaciones``, ``buscar``, ``publicar``
-- POST: ``publicar``
+- `publicaciones`: página principal con listado de publicaciones y filtro por categoría.
+- `buscar`: página de búsqueda de productos o servicios.
+- `publicar`: formulario para crear una nueva publicación (requiere autenticación).
+- `registro`: formulario de registro de nuevos usuarios.
+- `iniciar_sesion`: formulario de inicio de sesión.
+- `cerrar_sesion`: cierre de sesión del usuario autenticado.
+
+Cada vista solo responde a los métodos HTTP que tiene definidos, tales como:
+- GET: `publicaciones`, `buscar`, `publicar`, `registro`, `iniciar_sesion`
+- POST: `publicar`, `registro`, `iniciar_sesion`, `cerrar_sesion`
 
 Si llega cualquier otro método, la vista lo ignora y retorna None.
 """
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from publicaciones.forms import PublicacionForm
+from publicaciones.forms import LoginForm, PublicacionForm, RegistroForm
 from publicaciones.models import Categoria, Publicacion
 
 
@@ -130,6 +137,9 @@ def buscar(request):
 def publicar(request):
     """Permite crear una nueva publicación en la plataforma.
 
+    Requiere que el usuario esté autenticado. Si no lo está, redirige
+    a la página de inicio de sesión.
+
     - En GET: muestra el formulario vacío para ingresar los datos del producto.
     - En POST con datos válidos: guarda la nueva publicación y redirige a la página principal. 
     - En POST con datos inválidos: vuelve a mostrar el formulario con los errores.
@@ -152,6 +162,9 @@ def publicar(request):
         Retorna None si el método HTTP no es GET ni POST.
 
     """
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     if request.method == "POST":
         # Inicializar el formulario con los datos enviados, incluyendo archivos (imagen)
         form_publicacion = PublicacionForm(request.POST, request.FILES)
@@ -159,6 +172,11 @@ def publicar(request):
         if form_publicacion.is_valid():
             # Guardar la publicación sin confirmar aún para poder adicionar relaciones Many-to-many (m2m)
             publicacion = form_publicacion.save(commit = False)
+            publicacion.usuario = request.user
+            #AJUSTE, AÑADIR CAMPOS DEL USUARIO
+            publicacion.nombre_vendedor = f"{request.user.first_name} {request.user.last_name}".strip()
+            publicacion.correo_electronico = request.user.email
+
             publicacion.save()
             form_publicacion.save_m2m()
 
@@ -167,7 +185,7 @@ def publicar(request):
             if nueva_categoria:
                 categoria, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
                 publicacion.categorias.add(categoria)
-
+            messages.success(request, "¡Publicación creada exitosamente!")
             return redirect("/publicaciones/#publicaciones")
 
         # Si el formulario tiene errores, volver a renderizarlo con los mensajes de error
@@ -186,3 +204,187 @@ def publicar(request):
             {"form_publicacion": form_publicacion},
         )
     return None
+
+
+@login_required
+def editar_publicacion(request, pk):
+    """Permite editar una publicación existente.
+    Solo el dueño de la publicación puede editarla.
+    Si la disponibilidad cambia a NO_DISPONIBLE, la publicación se elimina.
+    """
+    try:
+        publicacion = Publicacion.objects.get(pk=pk)
+    except Publicacion.DoesNotExist:
+        messages.error(request, "La publicación no existe.")
+        return redirect("publicaciones")
+
+    if publicacion.usuario != request.user:
+        messages.error(request, "No tienes permiso para editar esta publicación.")
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        # Si la disponibilidad en POST es NO_DISPONIBLE, eliminamos
+        if request.POST.get("disponibilidad") == "NO_DISPONIBLE":
+            publicacion.delete()
+            messages.success(request, "La publicación ha sido eliminada.")
+            return redirect("publicaciones")
+
+        form_publicacion = PublicacionForm(request.POST, request.FILES, instance=publicacion)
+
+        if form_publicacion.is_valid():
+            pub_guardada = form_publicacion.save(commit=False)
+            #MISMO CAMBIO DE BORRAR DEL FORM Y AÑADIR SEGUN USUARIO
+            pub_guardada.nombre_vendedor = f"{publicacion.usuario.first_name} {publicacion.usuario.last_name}".strip()
+            pub_guardada.correo_electronico = publicacion.usuario.email
+
+            pub_guardada.save()
+            form_publicacion.save_m2m()
+            
+            nueva_categoria = (form_publicacion.cleaned_data["nueva_categoria"].strip().title())
+            if nueva_categoria:
+                categoria, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
+                pub_guardada.categorias.add(categoria)
+                
+            messages.success(request, "¡Publicación actualizada exitosamente!")
+            return redirect("publicaciones")
+        else:
+            messages.error(request, "Por favor corrige los errores en el formulario.")
+            # No renderizamos una plantilla separada, solo redirigimos con mensajes
+            # En una aplicación real podríamos querer devolver el modal con errores, pero como el formulario está dentro del modal en la página principal, por ahora es más fácil redirigir. El usuario tendrá que intentarlo de nuevo.
+            return redirect("publicaciones")
+
+    return redirect("publicaciones")
+
+
+def registro(request):
+    """Muestra y procesa el formulario de registro de nuevos usuarios.
+
+    - En GET: muestra el formulario de registro vacío.
+    - En POST: valida los datos ingresados. Si son válidos, crea el usuario,
+      inicia sesión automáticamente y redirige a la página principal.
+      Si no son válidos, vuelve a mostrar el formulario con los errores.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        GET: HttpResponse con el template 'publicaciones/registro.html'.
+        POST válido: Redirige a la vista 'publicaciones'.
+        POST inválido: HttpResponse con el formulario y errores de validación.
+    """
+    if request.user.is_authenticated:
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "¡Cuenta creada exitosamente! Bienvenido/a.")
+            return redirect("publicaciones")
+        return render(
+            request,
+            "publicaciones/registro.html",
+            {"form": form},
+        )
+
+    if request.method == "GET":
+        form = RegistroForm()
+        return render(
+            request,
+            "publicaciones/registro.html",
+            {"form": form},
+        )
+    return None
+
+
+def iniciar_sesion(request):
+    """Muestra y procesa el formulario de inicio de sesión.
+
+    - En GET: muestra el formulario de login vacío.
+    - En POST: valida las credenciales. Si son correctas, inicia sesión
+      y redirige a la página principal. Si no, muestra un error.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        GET: HttpResponse con el template 'publicaciones/login.html'.
+        POST válido: Redirige a la vista 'publicaciones'.
+        POST inválido: HttpResponse con el formulario y errores.
+    """
+    if request.user.is_authenticated:
+        return redirect("publicaciones")
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            # Django usa username para autenticar; en nuestro caso username = email
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("publicaciones")
+            else:
+                form.add_error(None, "Correo o contraseña incorrectos.")
+        return render(
+            request,
+            "publicaciones/login.html",
+            {"form": form},
+        )
+
+    if request.method == "GET":
+        form = LoginForm()
+        return render(
+            request,
+            "publicaciones/login.html",
+            {"form": form},
+        )
+    return None
+
+
+def cerrar_sesion(request):
+    """Cierra la sesión del usuario autenticado y redirige a la página principal.
+
+    Args:
+        request: Objeto HttpRequest de Django.
+
+    Returns:
+        Redirige a la vista 'publicaciones'.
+    """
+    logout(request)
+    return redirect("publicaciones")
+
+#nuevo, es para tener el perfil propio
+def mi_perfil(request):
+    """Perfil propio: muestra datos del usuario y sus publicaciones.
+    Permite editar nombre, apellido y teléfono de contacto.
+    """
+    publicaciones_usuario = Publicacion.objects.filter(
+        usuario=request.user
+    ).order_by("-fecha_creacion")
+
+    return render(request, "publicaciones/perfil.html", {
+        "perfil_usuario": request.user,
+        "publicaciones_usuario": publicaciones_usuario,
+        "es_propio": True,
+    })
+
+
+def perfil(request, user_id):
+    """Perfil público de otro usuario: muestra sus datos y publicaciones activas."""
+    from django.contrib.auth.models import User
+    from django.shortcuts import get_object_or_404
+
+    perfil_usuario = get_object_or_404(User, id=user_id)
+    publicaciones_usuario = Publicacion.objects.filter(
+        usuario=perfil_usuario
+    ).order_by("-fecha_creacion")
+
+    return render(request, "publicaciones/perfil.html", {
+        "perfil_usuario": perfil_usuario,
+        "publicaciones_usuario": publicaciones_usuario,
+        "es_propio": request.user == perfil_usuario,
+    })
+

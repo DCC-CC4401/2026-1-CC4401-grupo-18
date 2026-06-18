@@ -13,6 +13,7 @@ Ante cualquier cambio a estos modelos, recordar ejecutar:
 
 """
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinLengthValidator
@@ -109,7 +110,19 @@ class Publicacion(models.Model):
     # Fecha de creación de la publicación. Se asigna automáticamente al confirmar la publicación.
     fecha_creacion = models.DateField(default=timezone.now)
 
-    # Relacion Many-to-Many con Categoria. Ver docstring de la clase Publicacion para explorar detalles sobre blank=True.
+    # Usuario que creó la publicación (null para publicaciones existentes sin dueño)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="publicaciones_creadas",
+    )
+
+    # Relacion Many-to-Many: Una publicación puede tener varias categorías y una categoría puede tener
+    # varias publicaciones o ninguna publicación.
+    # blank=True permite que una publicación no tenga categorías asignadas, y que una categoría exista
+    # sin publicaciones asociadas.
     categorias = models.ManyToManyField(
         Categoria, related_name="publicaciones", blank=True,
     )

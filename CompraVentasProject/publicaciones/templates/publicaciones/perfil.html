@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil – FCFM Market</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="publicar-body">
+
+  <section class="publicar-hero">
+    <nav class="top-nav">
+      <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
+      <ul class="nav-links">
+        <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
+        <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'publicar' %}">Publicar</a></li>
+        {% endif %}
+      </ul>
+      <div class="nav-icons">
+        {% if user.is_authenticated %}
+          <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+          <div class="nav-user-area">
+            <span class="nav-user-name">{{ user.first_name }}</span>
+            <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav">Salir</a>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn-auth-nav">Iniciar sesión</a>
+          <a href="{% url 'registro' %}" class="btn-auth-nav btn-registro-nav">Registrarse</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <div class="publicar-hero-content">
+      <div class="hero-tag">✦ Perfil</div>
+      <h1>{{ perfil_usuario.first_name }} {{ perfil_usuario.last_name }}</h1>
+    </div>
+  </section>
+
+  <main class="publicar-section">
+    <div class="perfil-layout">
+
+      <!-- Tarjeta de datos del usuario -->
+      <aside class="perfil-card">
+        <div class="perfil-avatar-grande">
+          {{ perfil_usuario.first_name|first|upper }}{{ perfil_usuario.last_name|first|upper }}
+        </div>
+
+        <h2 class="perfil-nombre">
+          {{ perfil_usuario.first_name }} {{ perfil_usuario.last_name }}
+        </h2>
+
+        <p class="perfil-email">{{ perfil_usuario.email }}</p>
+
+        <div class="perfil-stat">
+          <span class="perfil-stat-num">{{ publicaciones_usuario.count }}</span>
+          <span class="perfil-stat-label">publicaciones</span>
+        </div>
+
+        {% if es_propio %}
+          <a href="{% url 'publicar' %}" class="btn-publicar" style="margin-top: 20px; text-align:center;">
+            + Nueva publicación
+          </a>
+        {% endif %}
+      </aside>
+
+      <!-- Publicaciones del usuario -->
+      <section class="perfil-publicaciones">
+        <h3 class="perfil-seccion-titulo">
+          {% if es_propio %}Mis publicaciones{% else %}Publicaciones{% endif %}
+        </h3>
+
+        {% if publicaciones_usuario %}
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+            {% for p in publicaciones_usuario %}
+              <div class="col">
+                <article class="card h-100">
+                  <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ p.titulo }}</h5>
+                    <p class="card-desc">{{ p.descripcion }}</p>
+                    <div class="card-categories">
+                      {% for c in p.categorias.all %}
+                        <span class="category-badge">{{ c.nombre }}</span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
+                    <button type="button" class="btn-ver btn-abrir-modal"
+                            data-modal="modal-publicacion-{{ p.id }}">
+                      Ver más
+                    </button>
+                  </div>
+                </article>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <div class="icon">📦</div>
+            <p>{% if es_propio %}Aún no has publicado nada.{% else %}Este usuario no tiene publicaciones.{% endif %}</p>
+            {% if es_propio %}
+              <a href="{% url 'publicar' %}" class="btn-publicar">+ Crear primera publicación</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </section>
+    </div>
+  </main>
+
+  <!-- Modales de publicaciones -->
+  {% for p in publicaciones_usuario %}
+    <div id="modal-publicacion-{{ p.id }}" class="modal-publicacion">
+      <div class="modal-publicacion-contenido">
+        <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
+        <div class="modal-publicacion-grid">
+          <div class="modal-publicacion-izquierda">
+            <img src="{{ p.imagen.url }}" class="modal-publicacion-img" alt="{{ p.titulo }}">
+            <h2 class="modal-publicacion-titulo">{{ p.titulo }}</h2>
+          </div>
+          <div class="modal-publicacion-derecha">
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Descripción</span>
+              <p class="modal-detalle-texto">{{ p.descripcion }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <script>
+    document.querySelectorAll(".btn-abrir-modal").forEach(function(boton) {
+      boton.addEventListener("click", function() {
+        const modal = document.getElementById(boton.getAttribute("data-modal"));
+        if (modal) { modal.classList.add("activo"); document.body.classList.add("modal-abierto"); }
+      });
+    });
+    document.querySelectorAll(".modal-publicacion").forEach(function(modal) {
+      modal.querySelector(".modal-cerrar").addEventListener("click", function() {
+        modal.classList.remove("activo"); document.body.classList.remove("modal-abierto");
+      });
+      modal.addEventListener("click", function(e) {
+        if (e.target === modal) { modal.classList.remove("activo"); document.body.classList.remove("modal-abierto"); }
+      });
+    });
+  </script>
+</body>
+</html>
