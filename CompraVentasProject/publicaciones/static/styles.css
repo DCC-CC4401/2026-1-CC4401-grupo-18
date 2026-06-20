@@ -68,15 +68,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 48px;
+  padding: 16px 48px;                              /* agrega alto aquí */
+  background: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .nav-brand {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.3rem;
   color: #fff;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.2px;
 }
 
 .nav-brand:hover {
@@ -84,31 +87,42 @@ button {
 }
 
 .nav-links {
+  position: absolute;         /* saca del flujo normal */
+  left: 50%;
+  transform: translateX(-50%);  /* centra exactamente */
   display: flex;
-  gap: 32px;
+  gap: 0;
   list-style: none;
+  align-items: center;
 }
 
 .nav-links a {
   color: rgba(255, 255, 255, 0.85);
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition: color 0.2s;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  transition: all 0.2s;
+  padding: 6px 20px;
+  border-right: 1px solid rgba(255,255,255,0.3);
+}
+
+.nav-links li:first-child a {
+  border-left: none;
+}
+
+.nav-links li:last-child a {
+  border-right: none;
 }
 
 .nav-links a:hover {
   color: #fff;
+  background: rgba(255,255,255,0.15);
 }
 
 .nav-icons {
   display: flex;
-  gap: 16px;
-}
-
-.nav-icons a {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.35rem;
-  font-weight: 900;
+  gap: 8px;
+  align-items: center;
 }
 
 /* -------- HERO -------- */
@@ -119,9 +133,9 @@ button {
   background-image:
     linear-gradient(
       to bottom,
-      rgba(20, 15, 8, 0.40) 0%,
-      rgba(20, 15, 8, 0.08) 40%,
-      rgba(20, 15, 8, 0.68) 100%
+      rgba(20, 15, 8, 0.55) 0%,
+      rgba(20, 15, 8, 0.4) 40%,
+      rgba(20, 15, 8, 0.85) 100%
     ),
     url('https://ingenieria.uchile.cl/dam/jcr:ab4e85b1-49b2-48e3-88ae-7cdd2f2507c6/sobre-la-fcfm-header.jpg');
   background-size: cover;
@@ -195,10 +209,11 @@ button {
 
 .hero-title-row {
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 24px;
+  position: relative;
 }
 
 .hero-title {
@@ -241,6 +256,9 @@ button {
 .hero-search {
   max-width: 410px;
   width: 100%;
+  position: absolute;
+  right: 0;
+  bottom: -220px;    /* ajusta este valor para bajar más o menos */
 }
 
 .hero-search .input-group {
@@ -259,7 +277,7 @@ button {
   background: transparent;
   border: none;
   color: #fff;
-  padding: 13px 22px;
+  padding: 13px 16px;
   font-size: 0.9rem;
   outline: none;
 }
@@ -1040,7 +1058,7 @@ button {
 
 @media (max-width: 768px) {
   .top-nav {
-    padding: 16px 20px;
+    padding: 20px 48px;
   }
 
   .nav-links {
@@ -1135,36 +1153,38 @@ button {
 /* -------- AUTENTICACIÓN: NAVBAR -------- */
 
 .btn-auth-nav {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 0.78rem;
-  padding: 7px 18px;
-  border-radius: 50px;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;                        /* semibold, no 800 */
+  font-size: 1.1rem;                      /* más pequeño que antes */
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.15);                 /* Iniciar sesión sin relleno */
   transition: all 0.22s;
   white-space: nowrap;
+  align-self: stretch;         /* agrega esto */
+  display: flex;               /* agrega esto */
+  align-items: center;         /* agrega esto */
+  margin: 4px 0;              /* agrega esto */
 }
 
 .btn-auth-nav:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
   color: #fff;
-  transform: translateY(-1px);
 }
 
 .btn-registro-nav {
-  background: #78c2ad;
+  background: #5ba893;
+  border-color: #5ba893;
   color: #fff;
-  border-color: #78c2ad;
 }
 
 .btn-registro-nav:hover {
   background: #56cc9d;
-  color: #fff;
   border-color: #56cc9d;
+  color: #fff;
 }
 
 .btn-logout-nav {
