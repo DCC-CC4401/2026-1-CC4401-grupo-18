@@ -2,12 +2,15 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Compra y Vende FCFM</title>
 
   <link rel="stylesheet" href="{% static 'styles.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body id="inicio">
@@ -18,27 +21,27 @@
 
     <nav class="top-nav">
       <a href="{% url 'publicaciones' %}" class="nav-brand">FCFM Market</a>
-      
+
 
       <ul class="nav-links">
         <li><a href="{% url 'publicaciones' %}#inicio">Inicio</a></li>
         <li><a href="{% url 'publicaciones' %}#publicaciones">Publicaciones</a></li>
         {% if user.is_authenticated %}
-          <li><a href="{% url 'publicar' %}">Publicar</a></li>
+        <li><a href="{% url 'publicar' %}">Publicar</a></li>
         {% endif %}
       </ul>
 
       <div class="nav-icons">
         {% if user.is_authenticated %}
-          <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
-          <div class="nav-user-area">
-            <!--aca el cambio-->
-            <a href="{% url 'mi_perfil' %}" class="nav-user-name">{{ user.first_name }}</a>
-            <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
-          </div>
+        <a href="{% url 'publicar' %}" title="Nueva publicación">+</a>
+        <div class="nav-user-area">
+          <!--aca el cambio-->
+          <a href="{% url 'mi_perfil' %}" class="nav-user-name">{{ user.first_name }}</a>
+          <a href="{% url 'logout' %}" class="btn-auth-nav btn-logout-nav" title="Cerrar sesión">Salir</a>
+        </div>
         {% else %}
-          <a href="{% url 'login' %}" class="btn-auth-nav">Iniciar sesión</a>
-          <a href="{% url 'registro' %}" class="btn-auth-nav btn-registro-nav">Registrarse</a>
+        <a href="{% url 'login' %}" class="btn-auth-nav">Iniciar sesión</a>
+        <a href="{% url 'registro' %}" class="btn-auth-nav btn-registro-nav">Registrarse</a>
         {% endif %}
       </div>
     </nav>
@@ -55,74 +58,69 @@
         <div class="hero-search">
           <form method="get" action="{% url 'publicaciones' %}#publicaciones">
             {% if c_activa %}
-              <input type="hidden" name="categoria" value="{{ c_activa }}">
+            <input type="hidden" name="categoria" value="{{ c_activa }}">
             {% endif %}
 
             <div class="input-group">
-              <input
-                type="text"
-                name="q"
-                value="{{ q }}"
-                placeholder="¿Qué estás buscando?"
-              >
+              <input type="text" name="q" value="{{ q }}" placeholder="¿Qué estás buscando?">
               <button type="submit">Buscar</button>
             </div>
           </form>
         </div>
       </div>
 
-<hr style="
+      <hr style="
   border: none;
   border-top: 2.5px solid rgba(255,255,255,0.4);
   margin: 0.8rem 0;
   width: 32%;
 ">
 
-<section class="descripcion-marketplace" style="
+      <section class="descripcion-marketplace" style="
   margin-top: 2rem; 
   max-width: 460px;
   background: transparent;
   padding: 1rem 0rem;
   border-radius: 8px;
 ">
-<h2 class="descripcion-titulo" style="
+        <h2 class="descripcion-titulo" style="
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.45rem;
   margin-bottom: 10px;
   letter-spacing: 0.3px;
   text-shadow: 0 1px 8px rgba(0,0,0,0.6);
 ">
-    Encuentra o publica productos y servicios dentro de la comunidad.
-  </h2>
- <p class="descripcion-texto" style="
+          Encuentra o publica productos y servicios dentro de la comunidad.
+        </h2>
+        <p class="descripcion-texto" style="
   font-family: 'Nunito', sans-serif;
-  font-size: 0.99rem;
+  font-size: 1.15rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.95);
   text-align: justify;
   text-align-last: left;
   text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
 ">
-    Desde entradas a eventos, snacks, ropa y accesorios, hasta servicios de belleza, 
-    clases y artículos handmade — si alguien en la facultad lo tiene, lo 
-    <strong><em>encuentras</em></strong> aquí.
-  </p>
-  <p class="descripcion-texto" style="
+          Desde entradas a eventos, snacks, ropa y accesorios, hasta servicios de belleza,
+          clases y artículos handmade — si alguien en la facultad lo tiene, lo
+          <strong><em>encuentras</em></strong> aquí.
+        </p>
+        <p class="descripcion-texto" style="
   font-family: 'Nunito', sans-serif;
-  font-size: 0.99rem;
+  font-size: 1.15rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.95);
   text-align: justify;
   text-align-last: left;
  text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
 ">
-    O ¿tienes algo que ofrecer?, <strong><em>publícalo</em></strong> en segundos y llega directo a tus compañeres.
-  </p>
-</section>
-  
+          O ¿tienes algo que ofrecer?, <strong><em>publícalo</em></strong> en segundos y llega directo a tus compañeres.
+        </p>
+      </section>
+
     </div>
 
     <a href="#publicaciones" class="scroll-hint">
@@ -134,11 +132,11 @@
   <main id="publicaciones" class="market-section">
 
     {% if messages %}
-      {% for message in messages %}
-        <div class="alerta-exito alerta-toast" id="alerta-mensaje">
-          {{ message }}
-        </div>
-      {% endfor %}
+    {% for message in messages %}
+    <div class="alerta-exito alerta-toast" id="alerta-mensaje">
+      {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
 
     <div class="section-header">
@@ -148,295 +146,289 @@
       </div>
 
       {% if user.is_authenticated %}
-        <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
+      <a href="{% url 'publicar' %}" class="btn-publicar">+ Nueva publicación</a>
       {% endif %}
     </div>
 
     {% if q or c_activa %}
-      <div class="filter-status">
-        <div>
-          {% if q %}
-            <span>Resultados para: <strong>{{ q }}</strong></span>
-          {% endif %}
+    <div class="filter-status">
+      <div>
+        {% if q %}
+        <span>Resultados para: <strong>{{ q }}</strong></span>
+        {% endif %}
 
-          {% if c_activa %}
-            <span class="filter-dot">•</span>
-            <span>Categoría filtrada</span>
-          {% endif %}
-        </div>
-
-        <a href="{% url 'publicaciones' %}#publicaciones">Limpiar filtros</a>
+        {% if c_activa %}
+        <span class="filter-dot">•</span>
+        <span>Categoría filtrada</span>
+        {% endif %}
       </div>
+
+      <a href="{% url 'publicaciones' %}#publicaciones">Limpiar filtros</a>
+    </div>
     {% endif %}
 
     {% if categorias %}
-      <div class="cat-bar">
-        <a
-          href="{% url 'publicaciones' %}{% if q %}?q={{ q|urlencode }}{% endif %}#publicaciones"
-          class="cat-pill {% if not c_activa %}activo{% endif %}"
-        >
-          Todas
-        </a>
+    <div class="cat-bar">
+      <a href="{% url 'publicaciones' %}{% if q %}?q={{ q|urlencode }}{% endif %}#publicaciones"
+        class="cat-pill {% if not c_activa %}activo{% endif %}">
+        Todas
+      </a>
 
-        {% for c in categorias %}
-          <a
-            href="{% url 'publicaciones' %}?categoria={{ c.id }}{% if q %}&q={{ q|urlencode }}{% endif %}#publicaciones"
-            class="cat-pill {% if c_activa == c.id|stringformat:'s' %}activo{% endif %}"
-          >
-            {{ c.nombre }}
-          </a>
-        {% endfor %}
-      </div>
+      {% for c in categorias %}
+      <a href="{% url 'publicaciones' %}?categoria={{ c.id }}{% if q %}&q={{ q|urlencode }}{% endif %}#publicaciones"
+        class="cat-pill {% if c_activa == c.id|stringformat:'s' %}activo{% endif %}">
+        {{ c.nombre }}
+      </a>
+      {% endfor %}
+    </div>
     {% endif %}
 
     <div class="cards-section">
       {% if publicaciones %}
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
-          {% for p in publicaciones %}
-            <div class="col">
-              <article class="card h-100">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        {% for p in publicaciones %}
+        <div class="col">
+          <article class="card h-100">
 
-               
-                <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
-                
 
-                <div class="card-body">
-                  <h5 class="card-title">{{ p.titulo }}</h5>
-                  <p class="card-desc">{{ p.descripcion }}</p>
+            <img src="{{ p.imagen.url }}" class="card-img-top" alt="{{ p.titulo }}">
 
-                  <div class="card-categories">
-                    {% for c in p.categorias.all %}
-                      <span class="category-badge">{{ c.nombre }}</span>
-                    {% endfor %}
-                  </div>
 
-                  {% if p.usuario %}
-                  <a href="{% url 'perfil' p.usuario.id %}" class="card-autor">
-                    <div class="autor-avatar">
-                      {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
-                    </div>
-                    <span>{{ p.usuario.first_name }} {{ p.usuario.last_name }}</span>
-                  </a>
-                  {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ p.titulo }}</h5>
+              <p class="card-desc">{{ p.descripcion }}</p>
 
+              <div class="card-categories">
+                {% for c in p.categorias.all %}
+                <span class="category-badge">{{ c.nombre }}</span>
+                {% endfor %}
+              </div>
+
+              {% if p.usuario %}
+              <a href="{% url 'perfil' p.usuario.id %}" class="card-autor">
+                <div class="autor-avatar">
+                  {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
                 </div>
+                <span>{{ p.usuario.first_name }} {{ p.usuario.last_name }}</span>
+              </a>
+              {% endif %}
 
-                <div class="card-footer">
-                  <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
-                  <div>
-                    {% if user.is_authenticated and p.usuario == user %}
-                      <button
-                        type="button"
-                        class="btn-ver btn-abrir-modal-editar"
-                        data-modal="modal-editar-{{ p.id }}"
-                        style="margin-right: 5px; background: #e4f3ef; color: #5ba893;"
-                      >
-                        Editar
-                      </button>
-                    {% endif %}
-                    <button
-                      type="button"
-                      class="btn-ver btn-abrir-modal"
-                      data-modal="modal-publicacion-{{ p.id }}"
-                    >
-                      Ver más
-                    </button>
-                  </div>
-                </div>
-
-              </article>
             </div>
-          {% endfor %}
+
+            <div class="card-footer">
+              <span class="card-date">{{ p.fecha_creacion|date:"d M Y" }}</span>
+              <div>
+                {% if user.is_authenticated and p.usuario == user %}
+                <button type="button" class="btn-ver btn-abrir-modal-editar" data-modal="modal-editar-{{ p.id }}"
+                  style="margin-right: 5px; background: #e4f3ef; color: #5ba893;">
+                  Editar
+                </button>
+                {% endif %}
+                <button type="button" class="btn-ver btn-abrir-modal" data-modal="modal-publicacion-{{ p.id }}">
+                  Ver más
+                </button>
+              </div>
+            </div>
+
+          </article>
         </div>
+        {% endfor %}
+      </div>
 
       {% else %}
-        <div class="empty-state">
-          <div class="icon">🔍</div>
-          <p>No hay publicaciones con ese criterio.</p>
-          <a href="{% url 'publicaciones' %}#publicaciones" class="btn-publicar">
-            Ver todas las publicaciones
-          </a>
-        </div>
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>No hay publicaciones con ese criterio.</p>
+        <a href="{% url 'publicaciones' %}#publicaciones" class="btn-publicar">
+          Ver todas las publicaciones
+        </a>
+      </div>
       {% endif %}
     </div>
   </main>
 
   {% if publicaciones %}
-    {% for p in publicaciones %}
-      <div id="modal-publicacion-{{ p.id }}" class="modal-publicacion">
-        <div class="modal-publicacion-contenido">
-          <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
+  {% for p in publicaciones %}
+  <div id="modal-publicacion-{{ p.id }}" class="modal-publicacion">
+    <div class="modal-publicacion-contenido">
+      <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
 
-          <div class="modal-publicacion-grid">
-            <div class="modal-publicacion-izquierda">
-              <img
-                src="{{ p.imagen.url }}"
-                class="modal-publicacion-img"
-                alt="{{ p.titulo }}"
-              >
+      <div class="modal-publicacion-grid">
+        <div class="modal-publicacion-izquierda">
+          <img src="{{ p.imagen.url }}" class="modal-publicacion-img" alt="{{ p.titulo }}">
 
-              <h2 class="modal-publicacion-titulo">{{ p.titulo }}</h2>
-            </div>
+          <h2 class="modal-publicacion-titulo">{{ p.titulo }}</h2>
+        </div>
 
-            <div class="modal-publicacion-derecha">
-              <!-- NUEVO -->
-               <div class="modal-detalle">
-                <span class="modal-detalle-label">Vendedor</span>
-                <div class="modal-vendedor">
-                  <div class="autor-avatar autor-avatar--grande">
-                    {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
-                  </div>
-                  <div>
-                    <p class="modal-detalle-texto">{{ p.usuario.first_name }} {{ p.usuario.last_name }}</p>
-                    <p class="modal-detalle-texto">{{ p.usuario.email }}</p>
-                  </div>
-                </div>
+        <div class="modal-publicacion-derecha">
+          <!-- NUEVO -->
+          <div class="modal-detalle">
+            <span class="modal-detalle-label">Vendedor</span>
+            <div class="modal-vendedor">
+              <div class="autor-avatar autor-avatar--grande">
+                {{ p.usuario.first_name|first|upper }}{{ p.usuario.last_name|first|upper }}
               </div>
-              <!-- TERMINA LO NUEVO -->
-               
-              <div class="modal-detalle modal-detalle-descripcion">
-                <span class="modal-detalle-label">Descripción</span>
-                <p class="modal-detalle-texto">{{ p.descripcion }}</p>
-              </div>
-
-              <div class="modal-detalle-grid">
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Precio</span>
-                  <p class="modal-detalle-texto">{{ p.precio }}</p>
-                </div>
-
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Ubicación</span>
-                  <p class="modal-detalle-texto">{{ p.ubicacion }}</p>
-                </div>
-
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Disponibilidad</span>
-                  <p class="modal-detalle-texto">{{ p.disponibilidad }}</p>
-                </div>
-
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Vendedor</span>
-                  <p class="modal-detalle-texto">{{ p.nombre_vendedor }}</p>
-                </div>
-
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Correo</span>
-                  <p class="modal-detalle-texto">{{ p.correo_electronico }}</p>
-                </div>
-
-                <div class="modal-detalle">
-                  <span class="modal-detalle-label">Teléfono</span>
-                  <p class="modal-detalle-texto">{{ p.telefono }}</p>
-                </div>
+              <div>
+                <p class="modal-detalle-texto">{{ p.usuario.first_name }} {{ p.usuario.last_name }}</p>
+                <p class="modal-detalle-texto">{{ p.usuario.email }}</p>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    {% endfor %}
-  {% endif %}
+          <!-- TERMINA LO NUEVO -->
 
-  {% if user.is_authenticated %}
-    {% for p in publicaciones %}
-      {% if p.usuario == user %}
-        <div id="modal-editar-{{ p.id }}" class="modal-publicacion modal-editar">
-          <div class="modal-publicacion-contenido">
-            <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
-            <form method="post" action="{% url 'editar_publicacion' p.id %}" enctype="multipart/form-data" id="form-editar-{{ p.id }}">
-              {% csrf_token %}
-              <div class="modal-publicacion-grid">
-                <div class="modal-publicacion-izquierda">
-                  <div class="edit-img-container">
-                    <img src="{{ p.imagen.url }}" class="modal-publicacion-img" alt="{{ p.titulo }}" id="preview-editar-{{ p.id }}">
-                    <label for="id_imagen_{{ p.id }}" class="btn-edit-icon" title="Cambiar imagen">✏️</label>
-                    <input type="file" name="imagen" id="id_imagen_{{ p.id }}" class="hidden-input img-edit-input" accept="image/*" data-preview="preview-editar-{{ p.id }}">
-                  </div>
-
-                  <div class="edit-field-group">
-                    <input type="text" name="titulo" value="{{ p.titulo }}" class="modal-publicacion-titulo edit-input-title" required minlength="3">
-                    <span class="btn-edit-icon" title="Editar título">✏️</span>
-                  </div>
-                </div>
-
-                <div class="modal-publicacion-derecha">
-                  <div class="modal-detalle modal-detalle-descripcion edit-field-group">
-                    <span class="modal-detalle-label">Descripción <span class="btn-edit-icon">✏️</span></span>
-                    <textarea name="descripcion" class="edit-textarea" required>{{ p.descripcion }}</textarea>
-                  </div>
-
-                  <div class="modal-detalle-grid">
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Precio <span class="btn-edit-icon">✏️</span></span>
-                      <input type="number" name="precio" value="{{ p.precio }}" class="edit-input" required min="0">
-                    </div>
-
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Ubicación <span class="btn-edit-icon">✏️</span></span>
-                      <input type="text" name="ubicacion" value="{{ p.ubicacion }}" class="edit-input" required>
-                    </div>
-
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Disponibilidad <span class="btn-edit-icon">✏️</span></span>
-                      <select name="disponibilidad" class="edit-select disponibilidad-select" data-form="form-editar-{{ p.id }}" data-modal="modal-confirmacion-eliminar" required>
-                        <option value="DISPONIBLE" {% if p.disponibilidad == 'DISPONIBLE' %}selected{% endif %}>Disponible</option>
-                        <option value="RESERVADO" {% if p.disponibilidad == 'RESERVADO' %}selected{% endif %}>Reservado</option>
-                        <option value="NO_DISPONIBLE" {% if p.disponibilidad == 'NO_DISPONIBLE' %}selected{% endif %}>No disponible</option>
-                      </select>
-                    </div>
-
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Vendedor <span class="btn-edit-icon">✏️</span></span>
-                      <input type="text" name="nombre_vendedor" value="{{ p.nombre_vendedor }}" class="edit-input" required>
-                    </div>
-
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Correo <span class="btn-edit-icon">✏️</span></span>
-                      <input type="email" name="correo_electronico" value="{{ p.correo_electronico }}" class="edit-input" required>
-                    </div>
-
-                    <div class="modal-detalle edit-field-group">
-                      <span class="modal-detalle-label">Teléfono <span class="btn-edit-icon">✏️</span></span>
-                      <input type="text" name="telefono" value="{{ p.telefono }}" class="edit-input" required>
-                    </div>
-                  </div>
-                  
-                  <div class="modal-detalle edit-field-group" style="margin-top: 14px;">
-                      <span class="modal-detalle-label">Categorías <span class="btn-edit-icon">✏️</span></span>
-                      <div class="categoria-opciones edit-categorias">
-                         {% for c in categorias %}
-                            <label>
-                                <input type="checkbox" name="categorias" value="{{ c.id }}" {% if c in p.categorias.all %}checked{% endif %}>
-                                {{ c.nombre }}
-                            </label>
-                         {% endfor %}
-                      </div>
-                      <input type="text" name="nueva_categoria" placeholder="Nueva categoría (opcional)" class="edit-input" style="margin-top: 10px;">
-                  </div>
-
-                  <div class="form-actions" style="margin-top: auto; padding-top: 20px; justify-content: flex-end;">
-                    <button type="submit" class="btn-principal">Guardar</button>
-                  </div>
-                </div>
-              </div>
-            </form>
+          <div class="modal-detalle modal-detalle-descripcion">
+            <span class="modal-detalle-label">Descripción</span>
+            <p class="modal-detalle-texto">{{ p.descripcion }}</p>
           </div>
-        </div>
-      {% endif %}
-    {% endfor %}
-    <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
-    
-    <div id="modal-confirmacion-eliminar" class="modal-confirmacion">
-      <div class="caja-confirmacion">
-        <div class="modal-icon" style="color: #e84c61; background: #ffe4dc;">🗑️</div>
-        <h3>Eliminar publicación</h3>
-        <p>Al marcar esta publicación como "No disponible", será eliminada permanentemente. ¿Estás seguro?</p>
-        <div class="botones-confirmacion">
-          <button type="button" id="cancelar-eliminar" class="btn-secundario">Cancelar</button>
-          <button type="button" id="confirmar-eliminar" class="btn-principal" style="background: #e84c61;">Eliminar</button>
+
+          <div class="modal-detalle-grid">
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Precio</span>
+              <p class="modal-detalle-texto">{{ p.precio }}</p>
+            </div>
+
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Ubicación</span>
+              <p class="modal-detalle-texto">{{ p.ubicacion }}</p>
+            </div>
+
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Disponibilidad</span>
+              <p class="modal-detalle-texto">{{ p.disponibilidad }}</p>
+            </div>
+
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Vendedor</span>
+              <p class="modal-detalle-texto">{{ p.nombre_vendedor }}</p>
+            </div>
+
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Correo</span>
+              <p class="modal-detalle-texto">{{ p.correo_electronico }}</p>
+            </div>
+
+            <div class="modal-detalle">
+              <span class="modal-detalle-label">Teléfono</span>
+              <p class="modal-detalle-texto">{{ p.telefono }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  {% for p in publicaciones %}
+  {% if p.usuario == user %}
+  <div id="modal-editar-{{ p.id }}" class="modal-publicacion modal-editar">
+    <div class="modal-publicacion-contenido">
+      <button type="button" class="modal-cerrar" aria-label="Cerrar">×</button>
+      <form method="post" action="{% url 'editar_publicacion' p.id %}" enctype="multipart/form-data"
+        id="form-editar-{{ p.id }}">
+        {% csrf_token %}
+        <div class="modal-publicacion-grid">
+          <div class="modal-publicacion-izquierda">
+            <div class="edit-img-container">
+              <img src="{{ p.imagen.url }}" class="modal-publicacion-img" alt="{{ p.titulo }}"
+                id="preview-editar-{{ p.id }}">
+              <label for="id_imagen_{{ p.id }}" class="btn-edit-icon" title="Cambiar imagen">✏️</label>
+              <input type="file" name="imagen" id="id_imagen_{{ p.id }}" class="hidden-input img-edit-input"
+                accept="image/*" data-preview="preview-editar-{{ p.id }}">
+            </div>
+
+            <div class="edit-field-group">
+              <input type="text" name="titulo" value="{{ p.titulo }}" class="modal-publicacion-titulo edit-input-title"
+                required minlength="3">
+              <span class="btn-edit-icon" title="Editar título">✏️</span>
+            </div>
+          </div>
+
+          <div class="modal-publicacion-derecha">
+            <div class="modal-detalle modal-detalle-descripcion edit-field-group">
+              <span class="modal-detalle-label">Descripción <span class="btn-edit-icon">✏️</span></span>
+              <textarea name="descripcion" class="edit-textarea" required>{{ p.descripcion }}</textarea>
+            </div>
+
+            <div class="modal-detalle-grid">
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Precio <span class="btn-edit-icon">✏️</span></span>
+                <input type="number" name="precio" value="{{ p.precio }}" class="edit-input" required min="0">
+              </div>
+
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Ubicación <span class="btn-edit-icon">✏️</span></span>
+                <input type="text" name="ubicacion" value="{{ p.ubicacion }}" class="edit-input" required>
+              </div>
+
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Disponibilidad <span class="btn-edit-icon">✏️</span></span>
+                <select name="disponibilidad" class="edit-select disponibilidad-select"
+                  data-form="form-editar-{{ p.id }}" data-modal="modal-confirmacion-eliminar" required>
+                  <option value="DISPONIBLE" {% if p.disponibilidad == 'DISPONIBLE' %}selected{% endif %}>Disponible
+                  </option>
+                  <option value="RESERVADO" {% if p.disponibilidad == 'RESERVADO' %}selected{% endif %}>Reservado</option>
+                  <option value="NO_DISPONIBLE" {% if p.disponibilidad == 'NO_DISPONIBLE' %}selected{% endif %}>No
+                    disponible</option>
+                </select>
+              </div>
+
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Vendedor <span class="btn-edit-icon">✏️</span></span>
+                <input type="text" name="nombre_vendedor" value="{{ p.nombre_vendedor }}" class="edit-input" required>
+              </div>
+
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Correo <span class="btn-edit-icon">✏️</span></span>
+                <input type="email" name="correo_electronico" value="{{ p.correo_electronico }}" class="edit-input"
+                  required>
+              </div>
+
+              <div class="modal-detalle edit-field-group">
+                <span class="modal-detalle-label">Teléfono <span class="btn-edit-icon">✏️</span></span>
+                <input type="text" name="telefono" value="{{ p.telefono }}" class="edit-input" required>
+              </div>
+            </div>
+
+            <div class="modal-detalle edit-field-group" style="margin-top: 14px;">
+              <span class="modal-detalle-label">Categorías <span class="btn-edit-icon">✏️</span></span>
+              <div class="categoria-opciones edit-categorias">
+                {% for c in categorias %}
+                <label>
+                  <input type="checkbox" name="categorias" value="{{ c.id }}" {% if c in p.categorias.all %}checked{% endif %}>
+                  {{ c.nombre }}
+                </label>
+                {% endfor %}
+              </div>
+              <input type="text" name="nueva_categoria" placeholder="Nueva categoría (opcional)" class="edit-input"
+                style="margin-top: 10px;">
+            </div>
+
+            <div class="form-actions" style="margin-top: auto; padding-top: 20px; justify-content: flex-end;">
+              <button type="submit" class="btn-principal">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+  <a href="/publicar/" class="fab" title="Nueva publicación">+</a>
+
+  <div id="modal-confirmacion-eliminar" class="modal-confirmacion">
+    <div class="caja-confirmacion">
+      <div class="modal-icon" style="color: #e84c61; background: #ffe4dc;">🗑️</div>
+      <h3>Eliminar publicación</h3>
+      <p>Al marcar esta publicación como "No disponible", será eliminada permanentemente. ¿Estás seguro?</p>
+      <div class="botones-confirmacion">
+        <button type="button" id="cancelar-eliminar" class="btn-secundario">Cancelar</button>
+        <button type="button" id="confirmar-eliminar" class="btn-principal"
+          style="background: #e84c61;">Eliminar</button>
+      </div>
+    </div>
+  </div>
   {% endif %}
 
   <script>
@@ -473,16 +465,16 @@
 
     const imgInputs = document.querySelectorAll('.img-edit-input');
     imgInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                const previewId = this.getAttribute('data-preview');
-                reader.onload = function(e) {
-                    document.getElementById(previewId).src = e.target.result;
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
+      input.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          const previewId = this.getAttribute('data-preview');
+          reader.onload = function (e) {
+            document.getElementById(previewId).src = e.target.result;
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
     });
 
     const selectsDisponibilidad = document.querySelectorAll('.disponibilidad-select');
@@ -494,50 +486,50 @@
     let previousSelectValue = null;
 
     selectsDisponibilidad.forEach(select => {
-        select.addEventListener('focus', function() {
-            previousSelectValue = this.value;
-        });
+      select.addEventListener('focus', function () {
+        previousSelectValue = this.value;
+      });
 
-        select.addEventListener('change', function() {
-            if (this.value === 'NO_DISPONIBLE') {
-                const modalId = this.getAttribute('data-modal');
-                const formId = this.getAttribute('data-form');
-                formToSubmitOnDelete = document.getElementById(formId);
-                selectToReset = this;
-                
-                if(modalEliminar) {
-                    modalEliminar.classList.add('activo');
-                    modalEliminar.style.display = 'flex';
-                    modalEliminar.style.zIndex = '9999';
-                }
-            }
-        });
+      select.addEventListener('change', function () {
+        if (this.value === 'NO_DISPONIBLE') {
+          const modalId = this.getAttribute('data-modal');
+          const formId = this.getAttribute('data-form');
+          formToSubmitOnDelete = document.getElementById(formId);
+          selectToReset = this;
+
+          if (modalEliminar) {
+            modalEliminar.classList.add('activo');
+            modalEliminar.style.display = 'flex';
+            modalEliminar.style.zIndex = '9999';
+          }
+        }
+      });
     });
 
     if (btnCancelarEliminar) {
-        btnCancelarEliminar.addEventListener('click', function() {
-            modalEliminar.classList.remove('activo');
-            modalEliminar.style.display = 'none';
-            
-            if (selectToReset && previousSelectValue) {
-                selectToReset.value = previousSelectValue;
-            } else if (selectToReset) {
-                selectToReset.value = 'DISPONIBLE';
-            }
-            formToSubmitOnDelete = null;
-            selectToReset = null;
-        });
+      btnCancelarEliminar.addEventListener('click', function () {
+        modalEliminar.classList.remove('activo');
+        modalEliminar.style.display = 'none';
+
+        if (selectToReset && previousSelectValue) {
+          selectToReset.value = previousSelectValue;
+        } else if (selectToReset) {
+          selectToReset.value = 'DISPONIBLE';
+        }
+        formToSubmitOnDelete = null;
+        selectToReset = null;
+      });
     }
 
     if (btnConfirmarEliminar) {
-        btnConfirmarEliminar.addEventListener('click', function() {
-            if (formToSubmitOnDelete) {
-                formToSubmitOnDelete.submit();
-            }
-        });
+      btnConfirmarEliminar.addEventListener('click', function () {
+        if (formToSubmitOnDelete) {
+          formToSubmitOnDelete.submit();
+        }
+      });
     }
-    
-    setTimeout(function() {
+
+    setTimeout(function () {
       const toast = document.getElementById('alerta-mensaje');
       if (toast) {
         toast.style.display = 'none';
@@ -545,4 +537,5 @@
     }, 5000);
   </script>
 </body>
+
 </html>
