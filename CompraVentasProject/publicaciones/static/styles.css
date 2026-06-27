@@ -606,6 +606,7 @@ button {
   font-size: 1.45rem;
   color: #1a1a1a;
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
