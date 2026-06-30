@@ -5,7 +5,6 @@
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-6.0-green?logo=django&logoColor=white)
 ![SQLite](https://img.shields.io/badge/Base%20de%20datos-SQLite-lightgrey?logo=sqlite)
-![Status](https://img.shields.io/badge/Estado-En%20desarrollo-orange)
 
 Página web desarrollada con Django mediante la cual la comunidad integrante de la FCFM tiene la posibilidad de publicar y explorar los productos o servicios disponibles para la venta dentro de la facultad. Los usuarios podrán interactuar desde la creación de publicaciones con atributos tales como imagen, descripción y categorías, hasta el uso de filtros o búsqueda de productos disponibles en un momento determinado o la búsqueda de un producto específico.
 
