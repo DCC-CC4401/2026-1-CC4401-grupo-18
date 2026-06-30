@@ -16,7 +16,11 @@ Página web desarrollada con Django mediante la cual la comunidad integrante de 
 - 📋 **Listado de publicaciones** — se visualizan todos los productos disponibles ordenados por fecha de publicación desde la más reciente hasta la más antigua.
 - 🏷️ **Filtrado por categoría** — se filtran las publicaciones según su categoría.
 - 🔍 **Búsqueda de productos** — se encuentran productos o servicios específicos.
+- 🔎 **Detalle de la publicación** ("ver más") — ventana con la información completa del producto o servicio y los datos de contacto del vendedor.
 - 📝 **Publicar productos** — formulario para subir título, descripción, imagen y categorías de los productos.
+- ✏️ **Edición de publicaciones** — cada vendedor autenticado puede editar únicamente sus propias publicaciones.
+- 🔐 **Registro e inicio de sesión** — creación de cuenta y autenticación de vendedores.
+- 👤 **Perfil de vendedor** — página que reúne los datos del usuario y sus publicaciones.
 - 🗂️ **Panel de administración** — gestión completa de publicaciones y categorías desde `/admin`
 
 ---
@@ -27,7 +31,7 @@ Página web desarrollada con Django mediante la cual la comunidad integrante de 
 | --- | --- |
 | Python 3.10+ | Lenguaje principal |
 | Django 6.0 | Framework web |
-| SQLite | Base de datos (desarrollo) |
+| SQLite | Base de datos (desarrollado) |
 | Pillow | Procesamiento de imágenes |
 
 ---
@@ -94,9 +98,15 @@ Visita: [http://127.0.0.1:8000/publicaciones](http://127.0.0.1:8000/publicacione
 
 | URL | Descripción |
 |---|---|
-| `/publicaciones/` | Página principal con listado de publicaciones de productos o servicios y filtro por categoría |
-| `/publicar/` | Formulario para crear una nueva publicación |
+| `/publicaciones/` | Página principal con listado de publicaciones, búsqueda y filtro por categoría |
 | `/buscar/` | Buscador de productos o servicios |
+| `/publicar/` | Formulario para crear una nueva publicación (requiere inicio de sesión) |
+| `/editar/<id>/` | Edición de una publicación propia (requiere inicio de sesión) |
+| `/registro/` | Formulario de registro de nuevos usuarios |
+| `/login/` | Inicio de sesión |
+| `/logout/` | Cierre de sesión |
+| `/perfil/` | Perfil propio del usuario autenticado |
+| `/perfil/<id>/` | Perfil público de un vendedor |
 | `/admin/` | Panel de administración de Django |
 
 ---
@@ -118,24 +128,26 @@ Visita: [http://127.0.0.1:8000/publicaciones](http://127.0.0.1:8000/publicacione
 │   ├── publicaciones/                     # Aplicación principal
 │   │   ├── imagenes/                      # Imágenes de publicaciones
 │   │   ├── migrations/                    # Migraciones de base de datos
-│   │   │   └── 0001_initial.py
 │   │   │
 │   │   ├── static/                        # Archivos estáticos CSS/JS
 │   │   │   └── styles.css
 │   │   │
 │   │   ├── templates/
 │   │   │   └── publicaciones/             # Templates HTML
+│   │   │       ├── pagina_principal.html  # Listado, búsqueda, filtros, detalle y edición
 │   │   │       ├── buscar.html
-│   │   │       ├── pagina_principal.html
-│   │   │       └── publicar.html
+│   │   │       ├── publicar.html          # Formulario de creación de publicaciones
+│   │   │       ├── registro.html          # Formulario de registro
+│   │   │       ├── login.html             # Formulario de inicio de sesión
+│   │   │       └── perfil.html            # Perfil de usuario y sus publicaciones
 │   │   │
 │   │   ├── admin.py                       # Configuración panel de administración
 │   │   ├── apps.py                        # Configuración interna de la app
-│   │   ├── forms.py                       # Formulario de publicaciones
+│   │   ├── forms.py                       # Formularios: registro, inicio de sesión y publicación
 │   │   ├── models.py                      # Modelos de datos
-│   │   ├── tests.py                       # Pruebas unitarias y validación del sistema
+│   │   ├── tests.py                       # Pruebas del sistema
 │   │   ├── urls.py                        # URLs de la aplicación
-│   │   └── views.py                       # Lógica de las vistas: publicaciones, buscar, publicar
+│   │   └── views.py                       # Lógica de las vistas
 │   │
 │   ├── db.sqlite3                         # Base de datos SQLite
 │   └── manage.py                          # Administrador del proyecto Django
@@ -159,10 +171,17 @@ Visita: [http://127.0.0.1:8000/publicaciones](http://127.0.0.1:8000/publicacione
 
 | Campo | Tipo | Descripción |
 | --- | --- | --- |
-| `titulo` | CharField (128) | Título único del producto |
-| `descripcion` | TextField | Descripción del producto |
-| `imagen` | ImageField | Foto del producto |
+| `titulo` | CharField (128) | Título del producto o servicio (mínimo 3 caracteres) |
+| `descripcion` | TextField | Descripción del producto o servicio |
+| `imagen` | ImageField | Foto del producto o servicio |
+| `precio` | PositiveIntegerField | Precio en pesos chilenos |
+| `ubicacion` | CharField (128) | Lugar del producto o donde se presta el servicio |
+| `disponibilidad` | CharField (choices) | Estado: `DISPONIBLE`, `RESERVADO` o `NO_DISPONIBLE` |
+| `nombre_vendedor` | CharField (128) | Nombre del vendedor (se completa desde la cuenta) |
+| `correo_electronico` | EmailField | Correo de contacto (se completa desde la cuenta) |
+| `telefono` | CharField (12) | Teléfono de contacto del vendedor |
 | `fecha_creacion` | DateField | Fecha de publicación |
+| `usuario` | ForeignKey (User) | Vendedor que creó la publicación |
 | `categorias` | ManyToManyField | Categorías asociadas |
 
 ---
